@@ -134,19 +134,20 @@ export default function OnboardingPage() {
   const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = 
-        sessionStorage.getItem('eagle_principal_session') || 
-        localStorage.getItem('eagle_principal_session');
-
-      if (stored) {
-        try {
-          setPrincipalSession(JSON.parse(stored));
-        } catch {
+    async function checkZeroTrustSession() {
+      try {
+        const res = await fetch('/api/auth/session');
+        const data = await res.json();
+        if (data.authenticated && data.session) {
+          setPrincipalSession(data.session);
+        } else {
           setPrincipalSession(null);
         }
+      } catch {
+        setPrincipalSession(null);
       }
     }
+    checkZeroTrustSession();
   }, []);
 
   // Calculate compliance progress percentage

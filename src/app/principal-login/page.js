@@ -42,17 +42,7 @@ function PrincipalLoginForm() {
         throw new Error(data.error || 'Authentication failed. Please check your credentials.');
       }
 
-      // Store principal session
-      if (typeof window !== 'undefined') {
-        const sessionData = JSON.stringify({
-          token: data.token,
-          principal: data.principal,
-        });
-        sessionStorage.setItem('eagle_principal_session', sessionData);
-        localStorage.setItem('eagle_principal_session', sessionData);
-      }
-
-      // Redirect to onboarding landing dashboard
+      // Zero Trust: Session token set as HttpOnly cookie by API route.
       router.push('/onboarding');
 
     } catch (err) {

@@ -12,21 +12,29 @@ describe('Onboarding Portal Page', () => {
   beforeEach(() => {
     global.fetch = jest.fn();
     mockPush.mockReset();
-    sessionStorage.clear();
-    localStorage.clear();
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  it('renders page header and compliance progress meter', () => {
+  it('renders page header and compliance progress meter', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ authenticated: false, session: null }),
+    });
+
     render(<OnboardingPage />);
     expect(screen.getByRole('heading', { level: 1, name: /Project Onboarding & Intake Portal/i })).toBeInTheDocument();
     expect(screen.getByText(/Overall Project Compliance Clearance Status/i)).toBeInTheDocument();
   });
 
-  it('displays lock overlay and blur prompt when unauthenticated in Principal view', () => {
+  it('displays lock overlay and blur prompt when unauthenticated in Principal view', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ authenticated: false, session: null }),
+    });
+
     render(<OnboardingPage />);
     expect(screen.getByText(/Authentication Required to Access Data Room/i)).toBeInTheDocument();
 
@@ -37,15 +45,28 @@ describe('Onboarding Portal Page', () => {
     expect(mockPush).toHaveBeenCalledWith('/principal-login');
   });
 
-  it('removes blur overlay when authenticated session is present', () => {
-    const session = JSON.stringify({ token: 'SPON-123', principal: { name: 'Metro Infra' } });
-    sessionStorage.setItem('eagle_principal_session', session);
+  it('removes blur overlay when authenticated session is present', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        authenticated: true,
+        session: { sub: 'SPON-123', name: 'Metro Infra', role: 'PRINCIPAL' },
+      }),
+    });
 
     render(<OnboardingPage />);
-    expect(screen.queryByText(/Authentication Required to Access Data Room/i)).not.toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.queryByText(/Authentication Required to Access Data Room/i)).not.toBeInTheDocument();
+    });
   });
 
   it('renders compliance items for KYC, UBO, CIS, Architectural, MEP, Soil, and Permits', () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ authenticated: false, session: null }),
+    });
+
     render(<OnboardingPage />);
     expect(screen.getByText('Personal KYC & Passport Verification')).toBeInTheDocument();
     expect(screen.getByText('Ultimate Beneficial Owner (UBO) Disclosures')).toBeInTheDocument();
@@ -57,6 +78,11 @@ describe('Onboarding Portal Page', () => {
   });
 
   it('switches between Principal View and Admin View', () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ authenticated: false, session: null }),
+    });
+
     render(<OnboardingPage />);
 
     const adminRoleBtn = screen.getByRole('button', { name: /Admin View \(Backend\)/i });
@@ -72,22 +98,27 @@ describe('Onboarding Portal Page', () => {
   });
 
   it('allows Admin to invite a new Project Principal and generate an invitation link', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        success: true,
-        action: 'invite_principal',
-        invitation: {
-          inviteCode: 'INV-998877',
-          inviteUrl: '/principal-login?invite=INV-998877',
-          sponsorName: 'Atlantic Port Systems',
-          email: 'sponsor@atlantic.com',
-          projectName: 'Port Expansion Facility',
-          facilityAmount: '$60,000,000 USD',
-          status: 'Pending Registration',
-        },
-      }),
-    });
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ authenticated: false, session: null }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          success: true,
+          action: 'invite_principal',
+          invitation: {
+            inviteCode: 'INV-998877',
+            inviteUrl: '/principal-login?invite=INV-998877',
+            sponsorName: 'Atlantic Port Systems',
+            email: 'sponsor@atlantic.com',
+            projectName: 'Port Expansion Facility',
+            facilityAmount: '$60,000,000 USD',
+            status: 'Pending Registration',
+          },
+        }),
+      });
 
     render(<OnboardingPage />);
 
@@ -110,15 +141,20 @@ describe('Onboarding Portal Page', () => {
   });
 
   it('allows Admin to approve checklist items and update status', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        success: true,
-        action: 'admin_update_status',
-        itemId: 'item-03',
-        status: 'Verified',
-      }),
-    });
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ authenticated: false, session: null }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          success: true,
+          action: 'admin_update_status',
+          itemId: 'item-03',
+          status: 'Verified',
+        }),
+      });
 
     render(<OnboardingPage />);
 
@@ -136,14 +172,19 @@ describe('Onboarding Portal Page', () => {
   });
 
   it('submits capital raise feedback in Principal view', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        success: true,
-        action: 'submit_feedback',
-        receiptId: 'FBK-ONBOARDING-1',
-      }),
-    });
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ authenticated: false, session: null }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          success: true,
+          action: 'submit_feedback',
+          receiptId: 'FBK-ONBOARDING-1',
+        }),
+      });
 
     render(<OnboardingPage />);
 

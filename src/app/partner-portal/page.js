@@ -40,26 +40,30 @@ export default function PartnerPortalDashboard() {
   const [downloadNotice, setDownloadNotice] = useState('');
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedSession = 
-        sessionStorage.getItem('eagle_partner_session') || 
-        localStorage.getItem('eagle_partner_session');
-
-      if (storedSession) {
-        try {
-          setPartnerSession(JSON.parse(storedSession));
-        } catch {
+    // Zero Trust: Fetch current session from server HttpOnly cookie
+    async function checkSession() {
+      try {
+        const res = await fetch('/api/auth/session');
+        const data = await res.json();
+        if (data.authenticated && data.session) {
+          setPartnerSession(data.session);
+        } else {
           setPartnerSession(null);
         }
+      } catch {
+        setPartnerSession(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
+    checkSession();
   }, []);
 
-  const handleSignOut = () => {
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('eagle_partner_session');
-      localStorage.removeItem('eagle_partner_session');
+  const handleSignOut = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (err) {
+      console.error('Sign out error:', err);
     }
     setPartnerSession(null);
     router.push('/partner-login');
@@ -108,8 +112,6 @@ export default function PartnerPortalDashboard() {
     );
   }
 
-  const partner = partnerSession.partner || {};
-
   return (
     <>
       <Header />
@@ -122,7 +124,7 @@ export default function PartnerPortalDashboard() {
             <div className={styles.titleArea}>
               <div className={styles.securityTag}>
                 <span className={styles.securityDot}></span>
-                Active Secure Session
+                Active Zero Trust Session (HttpOnly)
               </div>
               <h1 className={styles.portalTitle}>Partner Executive Portal</h1>
               <p className={styles.partnerSubtext}>
@@ -132,9 +134,9 @@ export default function PartnerPortalDashboard() {
 
             <div className={styles.userProfileCard}>
               <div className={styles.profileInfo}>
-                <span className={styles.partnerName}>{partner.name || 'Verified Partner'}</span>
+                <span className={styles.partnerName}>{partnerSession.name || 'Verified Partner'}</span>
                 <span className={styles.clearanceBadge}>
-                  {partner.clearanceLevel || 'Level 4 — Strategic Investor'}
+                  {partnerSession.clearance || 'Level 4 — Tier 1 Investor'}
                 </span>
               </div>
               <button onClick={handleSignOut} className={styles.signOutBtn}>
@@ -232,16 +234,16 @@ export default function PartnerPortalDashboard() {
                 <div className={styles.auditItem}>
                   <span className={styles.auditAction}>Session Authentication Successful</span>
                   <span className={styles.auditMeta}>
-                    {partner.authenticatedAt ? new Date(partner.authenticatedAt).toLocaleString() : 'Just now'} • IP: 192.168.1.1 (TLS 1.3)
+                    {partnerSession.authenticatedAt ? new Date(partnerSession.authenticatedAt).toLocaleString() : 'Just now'} • TLS 1.3
                   </span>
                 </div>
                 <div className={styles.auditItem}>
                   <span className={styles.auditAction}>Security clearance level verified</span>
-                  <span className={styles.auditMeta}>Audit Ref: SEC-2026-88492</span>
+                  <span className={styles.auditMeta}>Clearance: {partnerSession.clearance}</span>
                 </div>
                 <div className={styles.auditItem}>
-                  <span className={styles.auditAction}>Encrypted session token issued</span>
-                  <span className={styles.auditMeta}>Token: {partnerSession.token || 'TK-ACTIVE'}</span>
+                  <span className={styles.auditAction}>Encrypted HttpOnly cookie verified</span>
+                  <span className={styles.auditMeta}>Subject: {partnerSession.sub}</span>
                 </div>
               </div>
             </div>

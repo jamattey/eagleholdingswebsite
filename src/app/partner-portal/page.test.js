@@ -10,12 +10,20 @@ jest.mock('next/navigation', () => ({
 
 describe('Partner Portal Dashboard Page', () => {
   beforeEach(() => {
-    sessionStorage.clear();
-    localStorage.clear();
+    global.fetch = jest.fn();
     mockPush.mockReset();
   });
 
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('renders restricted access notice when unauthenticated', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ authenticated: false, session: null }),
+    });
+
     render(<PartnerPortalDashboard />);
 
     await waitFor(() => {
@@ -30,16 +38,17 @@ describe('Partner Portal Dashboard Page', () => {
   });
 
   it('renders executive portal metrics and partner profile when session exists', async () => {
-    const mockSession = JSON.stringify({
-      token: 'TK-TEST-123',
-      partner: {
-        partnerId: 'EAGLE-8821',
-        name: 'Strategic Global Capital Group',
-        clearanceLevel: 'Level 4 — Tier 1 Investor',
-      },
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        authenticated: true,
+        session: {
+          sub: 'EAGLE-8821',
+          name: 'Strategic Global Capital Group',
+          clearance: 'Level 4 — Tier 1 Investor',
+        },
+      }),
     });
-
-    sessionStorage.setItem('eagle_partner_session', mockSession);
 
     render(<PartnerPortalDashboard />);
 
@@ -55,11 +64,13 @@ describe('Partner Portal Dashboard Page', () => {
   });
 
   it('renders strategic briefings and handles briefing download click', async () => {
-    const mockSession = JSON.stringify({
-      token: 'TK-TEST-123',
-      partner: { name: 'Verified Partner' },
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        authenticated: true,
+        session: { name: 'Verified Partner', clearance: 'Level 4' },
+      }),
     });
-    sessionStorage.setItem('eagle_partner_session', mockSession);
 
     render(<PartnerPortalDashboard />);
 
@@ -77,12 +88,19 @@ describe('Partner Portal Dashboard Page', () => {
     expect(screen.getByText(/Secure download initiated/i)).toBeInTheDocument();
   });
 
-  it('clears session and redirects to login when Sign Out is clicked', async () => {
-    const mockSession = JSON.stringify({
-      token: 'TK-TEST-123',
-      partner: { name: 'Verified Partner' },
-    });
-    sessionStorage.setItem('eagle_partner_session', mockSession);
+  it('calls logout API and redirects to login when Sign Out is clicked', async () => {
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: true,
+          session: { name: 'Verified Partner', clearance: 'Level 4' },
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true }),
+      });
 
     render(<PartnerPortalDashboard />);
 
@@ -92,7 +110,8 @@ describe('Partner Portal Dashboard Page', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Sign Out/i }));
 
-    expect(sessionStorage.getItem('eagle_partner_session')).toBeNull();
-    expect(mockPush).toHaveBeenCalledWith('/partner-login');
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/partner-login');
+    });
   });
 });

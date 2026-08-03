@@ -1,7 +1,8 @@
 // src/app/api/partner-login/route.js
-// OWASP Hardened Partner Login API with rate limiting, sanitization, timing-safe checks, and security logging.
+// OWASP Hardened Partner Login API with HttpOnly cookie session management.
 
 import { sanitizeInput, rateLimiter, safeTimingCompare, securityLog } from '@/lib/security';
+import { signJwt, createAuthCookie } from '@/lib/jwt';
 
 export async function POST(request) {
   const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '127.0.0.1';
@@ -21,7 +22,7 @@ export async function POST(request) {
     const body = sanitizeInput(rawBody);
     const { partnerId, securityKey } = body;
 
-    // Basic field presence check
+    // Field presence check
     if (!partnerId || !securityKey) {
       return Response.json(
         { error: 'Partner ID and Security Key are required.' },
@@ -40,22 +41,43 @@ export async function POST(request) {
       );
     }
 
-    // Generate mock authenticated session profile
-    const sessionToken = `TK-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    const partnerName = safeTimingCompare(cleanPartnerId.toUpperCase(), 'EAGLE-8821') 
+      ? 'Strategic Global Capital Group' 
+      : `Partner Entity (${cleanPartnerId})`;
+
+    // Create cryptographically signed JWT payload
+    const token = signJwt({
+      sub: cleanPartnerId,
+      name: partnerName,
+      role: 'PARTNER',
+      clearance: 'Level 4 — Tier 1 Investor',
+      authenticatedAt: new Date().toISOString(),
+    }, 28800); // 8 hours
+
+    const partnerProfile = {
+      partnerId: cleanPartnerId,
+      name: partnerName,
+      clearanceLevel: 'Level 4 — Tier 1 Investor',
+      authenticatedAt: new Date().toISOString(),
+    };
 
     securityLog('AUTH_SUCCESSFUL', { partnerId: cleanPartnerId, ip: clientIp });
 
-    return Response.json({
-      success: true,
-      token: sessionToken,
-      partner: {
-        partnerId: cleanPartnerId,
-        name: safeTimingCompare(cleanPartnerId.toUpperCase(), 'EAGLE-8821') ? 'Strategic Global Capital Group' : `Partner Entity (${cleanPartnerId})`,
-        clearanceLevel: 'Level 4 — Tier 1 Investor',
-        authenticatedAt: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
-      },
-    });
+    // Set Zero Trust HttpOnly Cookie header
+    return new Response(
+      JSON.stringify({
+        success: true,
+        token,
+        partner: partnerProfile,
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Set-Cookie': createAuthCookie(token, 28800),
+        },
+      }
+    );
 
   } catch (err) {
     console.error('Partner Login API error:', err);

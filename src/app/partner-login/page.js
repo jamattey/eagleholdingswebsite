@@ -11,7 +11,7 @@ export default function PartnerLogin() {
   const router = useRouter();
   const [partnerId, setPartnerId] = useState('');
   const [securityKey, setSecurityKey] = useState('');
-  const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'error'
+  const [status, setStatus] = useState('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = async (e) => {
@@ -32,17 +32,7 @@ export default function PartnerLogin() {
         throw new Error(data.error || 'Authentication failed. Please check your credentials.');
       }
 
-      // Store authenticated session in sessionStorage & localStorage
-      if (typeof window !== 'undefined') {
-        const sessionData = JSON.stringify({
-          token: data.token,
-          partner: data.partner,
-        });
-        sessionStorage.setItem('eagle_partner_session', sessionData);
-        localStorage.setItem('eagle_partner_session', sessionData);
-      }
-
-      // Redirect to Partner Portal Dashboard
+      // Zero Trust: Session is set as HttpOnly cookie by server. Redirect directly.
       router.push('/partner-portal');
 
     } catch (err) {

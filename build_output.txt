@@ -5,15 +5,15 @@
 ▲ Next.js 16.2.4 (Turbopack)
 
   Creating an optimized production build ...
-✓ Compiled successfully in 4.6s
+✓ Compiled successfully in 3.8s
   Running TypeScript ...
-  Finished TypeScript in 98ms ...
+  Finished TypeScript in 116ms ...
   Collecting page data using 7 workers ...
-  Generating static pages using 7 workers (0/23) ...
-  Generating static pages using 7 workers (5/23) 
-  Generating static pages using 7 workers (11/23) 
-  Generating static pages using 7 workers (17/23) 
-✓ Generating static pages using 7 workers (23/23) in 472ms
+  Generating static pages using 7 workers (0/25) ...
+  Generating static pages using 7 workers (6/25) 
+  Generating static pages using 7 workers (12/25) 
+  Generating static pages using 7 workers (18/25) 
+✓ Generating static pages using 7 workers (25/25) in 462ms
   Finalizing page optimization ...
 
 Route (app)
@@ -21,6 +21,8 @@ Route (app)
 ├ ○ /_not-found
 ├ ○ /aml-policy
 ├ ƒ /api/altcha
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/session
 ├ ƒ /api/contact
 ├ ƒ /api/onboarding
 ├ ƒ /api/partner-login
@@ -39,6 +41,8 @@ Route (app)
 ├ ○ /sitemap.xml
 └ ○ /terms
 
+
+ƒ Proxy (Middleware)
 
 ○  (Static)   prerendered as static content
 ƒ  (Dynamic)  server-rendered on demand

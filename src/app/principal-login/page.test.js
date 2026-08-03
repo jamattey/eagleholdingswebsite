@@ -64,8 +64,6 @@ describe('Project Principal Login Page', () => {
     await waitFor(() => {
       expect(mockPush).toHaveBeenCalledWith('/onboarding');
     });
-
-    expect(sessionStorage.getItem('eagle_principal_session')).not.toBeNull();
   });
 
   it('displays error message when authentication fails', async () => {
