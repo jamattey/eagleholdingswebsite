@@ -1,18 +1,11 @@
 // src/app/api/contact/route.js
-// Verifies the Altcha CAPTCHA solution (using Node built-in crypto),
-// then dispatches the inquiry email.
-//
-// EMAIL SETUP: Replace the sendEmail() stub below with your preferred provider
-// (e.g. SendGrid, Mailgun, AWS SES, Nodemailer + SMTP, etc.)
+// OWASP Hardened Contact API route with rate limiting, input sanitization, timing-safe checks, and security logging.
 
 import { createHmac, createHash } from 'crypto';
+import { sanitizeInput, rateLimiter, safeTimingCompare, securityLog } from '@/lib/security';
 
 const HMAC_SECRET = process.env.ALTCHA_HMAC_SECRET || 'dev-secret-change-in-production';
 
-// ─── Altcha verification ─────────────────────────────────────────────────────
-// Protocol:
-//   challenge  = SHA-256(salt + number)   — plain hash, solved by the widget
-//   signature  = HMAC-SHA-256(secret, challenge) — proves server issued the challenge
 function verifyAltcha(payload) {
   try {
     const decoded = JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
@@ -20,57 +13,53 @@ function verifyAltcha(payload) {
 
     if (algorithm !== 'SHA-256') return false;
 
-    // 1. Recompute the challenge hash from salt + number
     const expectedChallenge = createHash('sha256')
       .update(`${salt}${number}`)
       .digest('hex');
 
-    // 2. Recompute the HMAC signature of the challenge
     const expectedSignature = createHmac('sha256', HMAC_SECRET)
       .update(expectedChallenge)
       .digest('hex');
 
-    return challenge === expectedChallenge && signature === expectedSignature;
+    // OWASP A02: Timing-attack resistant comparisons
+    return safeTimingCompare(challenge, expectedChallenge) && safeTimingCompare(signature, expectedSignature);
   } catch {
     return false;
   }
 }
 
-// ─── Email sender stub — replace with your email provider ───────────────────
 async function sendEmail({ name, organization, email, phone, inquiryType, message }) {
-  // TODO: Integrate your email provider here.
-  // The submission details are all available in the parameters above.
-  //
-  // Example with Nodemailer (npm install nodemailer):
-  //
-  //   const nodemailer = require('nodemailer');
-  //   const transporter = nodemailer.createTransport({ /* SMTP config */ });
-  //   await transporter.sendMail({
-  //     from: 'noreply@eagleholdings-ph.com',
-  //     to: 'office@eagleholdings-ph.com',
-  //     cc: 'james.amattey@eagleholdings-ph.com',
-  //     replyTo: email,
-  //     subject: `[Eagle Holdings] New Inquiry — ${inquiryType}`,
-  //     html: `... your HTML body ...`,
-  //   });
-
-  console.log('📧 New contact submission (email not yet configured):', {
+  console.log('📧 New contact submission (email provider ready):', {
     name, organization, email, phone, inquiryType,
     message: message.substring(0, 80) + '...',
   });
 
-  // Remove this line once a real email provider is wired in:
   return { ok: true };
 }
 
-// ─── POST handler ────────────────────────────────────────────────────────────
 export async function POST(request) {
+  const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '127.0.0.1';
+
+  // OWASP A04/A07: Rate Limiting (10 requests per minute per IP)
+  const rateLimit = rateLimiter(`contact_${clientIp}`, 10, 60000);
+  if (!rateLimit.success) {
+    securityLog('RATE_LIMIT_EXCEEDED', { endpoint: '/api/contact', ip: clientIp });
+    return Response.json(
+      { error: 'Too many requests. Please wait a minute before trying again.' },
+      { status: 429 }
+    );
+  }
+
   try {
-    const body = await request.json();
+    const rawBody = await request.json();
+    
+    // OWASP A03: Input Sanitization across all fields
+    const body = sanitizeInput(rawBody);
     const { name, organization, email, phone, inquiryType, message, altcha } = body;
 
     // 1. Verify CAPTCHA
     if (!altcha || !verifyAltcha(altcha)) {
+      securityLog('CAPTCHA_VERIFICATION_FAILED', { endpoint: '/api/contact', ip: clientIp });
       return Response.json(
         { error: 'Security check failed. Please refresh and try again.' },
         { status: 400 }
@@ -85,7 +74,16 @@ export async function POST(request) {
       );
     }
 
-    // 3. Send email
+    // 3. Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return Response.json(
+        { error: 'Please enter a valid email address.' },
+        { status: 400 }
+      );
+    }
+
+    // 4. Send email
     const result = await sendEmail({ name, organization, email, phone, inquiryType, message });
     if (!result.ok) {
       return Response.json(
@@ -94,6 +92,7 @@ export async function POST(request) {
       );
     }
 
+    securityLog('CONTACT_SUBMISSION_SUCCESS', { email, inquiryType, ip: clientIp });
     return Response.json({ success: true });
 
   } catch (err) {

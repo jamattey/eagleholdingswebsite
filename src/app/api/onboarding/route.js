@@ -1,9 +1,24 @@
 // src/app/api/onboarding/route.js
-// Handles Principal intake actions and Admin backend deal management.
+// OWASP Hardened Onboarding API route supporting Principal intake actions and Admin deal management.
+
+import { sanitizeInput, rateLimiter, securityLog } from '@/lib/security';
 
 export async function POST(request) {
+  const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '127.0.0.1';
+
+  // OWASP A04/A07: Rate Limiting (20 requests per minute per IP)
+  const rateLimit = rateLimiter(`onboarding_${clientIp}`, 20, 60000);
+  if (!rateLimit.success) {
+    securityLog('RATE_LIMIT_EXCEEDED', { endpoint: '/api/onboarding', ip: clientIp });
+    return Response.json(
+      { error: 'Too many requests. Please wait a minute before trying again.' },
+      { status: 429 }
+    );
+  }
+
   try {
-    const body = await request.json();
+    const rawBody = await request.json();
+    const body = sanitizeInput(rawBody);
     const { action, role, itemId, newStatus, documentName, fileSize, feedbackText, targetCapital, preferredTerms, ltvRatio } = body;
 
     // Principal Action: Uploading a document into Data Room
@@ -12,7 +27,7 @@ export async function POST(request) {
         return Response.json({ error: 'Missing document item ID or file name.' }, { status: 400 });
       }
 
-      console.log('📁 [Principal] Data Room Upload:', { itemId, documentName, fileSize });
+      securityLog('VDR_DOCUMENT_UPLOAD', { itemId, documentName, fileSize, ip: clientIp });
 
       return Response.json({
         success: true,
@@ -30,7 +45,7 @@ export async function POST(request) {
         return Response.json({ error: 'Feedback text is required.' }, { status: 400 });
       }
 
-      console.log('💬 [Principal] Capital Raise Feedback Submitted:', { feedbackText });
+      securityLog('CAPITAL_RAISE_FEEDBACK', { ip: clientIp });
 
       return Response.json({
         success: true,
@@ -40,13 +55,13 @@ export async function POST(request) {
       });
     }
 
-    // Admin Action: Update checklist item status (Approve, Flag Action Required, Put Under Audit)
+    // Admin Action: Update checklist item status
     if (action === 'admin_update_status') {
       if (!itemId || !newStatus) {
         return Response.json({ error: 'Item ID and new status are required.' }, { status: 400 });
       }
 
-      console.log('🛡️ [Admin] Item Status Updated:', { itemId, newStatus });
+      securityLog('ADMIN_STATUS_CHANGE', { itemId, newStatus, ip: clientIp });
 
       return Response.json({
         success: true,
@@ -59,7 +74,7 @@ export async function POST(request) {
 
     // Admin Action: Modify Capital Raise Offer Terms
     if (action === 'admin_update_terms') {
-      console.log('⚙️ [Admin] Offer Terms Updated:', { targetCapital, preferredTerms, ltvRatio });
+      securityLog('ADMIN_TERMS_UPDATE', { targetCapital, preferredTerms, ltvRatio, ip: clientIp });
 
       return Response.json({
         success: true,

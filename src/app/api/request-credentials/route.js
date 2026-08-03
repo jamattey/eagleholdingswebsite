@@ -1,7 +1,8 @@
 // src/app/api/request-credentials/route.js
-// Handles partner credential requests and dispatches notification/log.
+// OWASP Hardened Credential Request API with rate limiting, sanitization, timing-safe checks, and security logging.
 
 import { createHmac, createHash } from 'crypto';
+import { sanitizeInput, rateLimiter, safeTimingCompare, securityLog } from '@/lib/security';
 
 const HMAC_SECRET = process.env.ALTCHA_HMAC_SECRET || 'dev-secret-change-in-production';
 
@@ -20,7 +21,7 @@ function verifyAltcha(payload) {
       .update(expectedChallenge)
       .digest('hex');
 
-    return challenge === expectedChallenge && signature === expectedSignature;
+    return safeTimingCompare(challenge, expectedChallenge) && safeTimingCompare(signature, expectedSignature);
   } catch {
     return false;
   }
@@ -39,8 +40,21 @@ async function dispatchCredentialRequest({ referenceId, firstName, lastName, ema
 }
 
 export async function POST(request) {
+  const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '127.0.0.1';
+
+  // OWASP A04/A07: Rate Limiting (5 requests per minute per IP)
+  const rateLimit = rateLimiter(`req_cred_${clientIp}`, 5, 60000);
+  if (!rateLimit.success) {
+    securityLog('RATE_LIMIT_EXCEEDED', { endpoint: '/api/request-credentials', ip: clientIp });
+    return Response.json(
+      { error: 'Too many requests. Please wait a minute before trying again.' },
+      { status: 429 }
+    );
+  }
+
   try {
-    const body = await request.json();
+    const rawBody = await request.json();
+    const body = sanitizeInput(rawBody);
     const { firstName, lastName, email, organization, purpose, altcha } = body;
 
     // 1. Basic validation
@@ -62,6 +76,7 @@ export async function POST(request) {
 
     // 3. Verify CAPTCHA if provided
     if (altcha && !verifyAltcha(altcha)) {
+      securityLog('CAPTCHA_VERIFICATION_FAILED', { endpoint: '/api/request-credentials', ip: clientIp });
       return Response.json(
         { error: 'Security check failed. Please try submitting again.' },
         { status: 400 }
@@ -88,6 +103,7 @@ export async function POST(request) {
       );
     }
 
+    securityLog('CREDENTIAL_REQUEST_SUCCESS', { referenceId, email, ip: clientIp });
     return Response.json({ success: true, referenceId });
 
   } catch (err) {
