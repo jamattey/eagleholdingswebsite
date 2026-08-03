@@ -321,7 +321,7 @@ export default function AdminPortalPage() {
               ⚙️ Advisory Term Sheets
             </button>
             <button className={`${styles.commandBtn} ${activeTab === 'security' ? styles.activeCommand : ''}`} onClick={() => setActiveTab('security')}>
-              🛡️ OWASP Audit Stream
+              🛡️ Security & Audit Stream
             </button>
           </div>
 
@@ -685,12 +685,12 @@ export default function AdminPortalPage() {
             </div>
           )}
 
-          {/* ─────────── OWASP SECURITY AUDIT STREAM ─────────── */}
+          {/* ─────────── SECURITY AUDIT STREAM ─────────── */}
           {activeTab === 'security' && (
             <div className={styles.viewSection}>
               <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>OWASP Security Audit &amp; Event Stream</h2>
-                <p className={styles.sectionSubtitle}>Real-time log of security events, authentication attempts, rate limiting events, and zero-trust verifications.</p>
+                <h2 className={styles.sectionTitle}>System Security Audit &amp; Event Stream</h2>
+                <p className={styles.sectionSubtitle}>Real-time log of security events, authentication attempts, rate limiting events, and system audit verifications.</p>
               </div>
 
               <div className={styles.adminTableCard}>

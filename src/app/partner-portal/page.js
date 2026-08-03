@@ -182,7 +182,7 @@ export default function PartnerPortalDashboard() {
             <div className={styles.titleArea}>
               <div className={styles.securityTag}>
                 <span className={styles.securityDot}></span>
-                Zero Trust HttpOnly Session · Institutional IR Gateway
+                Encrypted Session · Institutional IR Gateway
               </div>
               <h1 className={styles.portalTitle}>Investor Relations &amp; Capital Advisory Dashboard</h1>
               <p className={styles.partnerSubtext}>
@@ -540,7 +540,7 @@ export default function PartnerPortalDashboard() {
                   <div className={styles.govCard}>
                     <div className={styles.metricIcon} style={{ fontSize: '2rem', marginBottom: '8px' }}>⚖️</div>
                     <h3 className={styles.docTitle}>Anti-Money Laundering &amp; KYC Charter</h3>
-                    <p className={styles.docDescription}>OWASP and FATF-compliant anti-money laundering policies, beneficiary verification criteria, and zero-trust security audits.</p>
+                    <p className={styles.docDescription}>International FATF-compliant anti-money laundering policies, beneficiary verification criteria, and security audit protocols.</p>
                     <button onClick={() => handleDownload('AML & KYC Policy Charter', 'GOV-AML')} className={styles.downloadBtn} style={{ marginTop: '16px' }}>
                       Download Compliance Charter ↓
                     </button>
@@ -567,7 +567,7 @@ export default function PartnerPortalDashboard() {
                 <div className={styles.auditItem}>
                   <span className={styles.auditAction}>Session Authentication Verified</span>
                   <span className={styles.auditMeta}>
-                    {partnerSession.authenticatedAt ? new Date(partnerSession.authenticatedAt).toLocaleString() : 'Just now'} • TLS 1.3 OWASP Shield
+                    {partnerSession.authenticatedAt ? new Date(partnerSession.authenticatedAt).toLocaleString() : 'Just now'} • TLS 1.3 Secure Connection
                   </span>
                 </div>
                 <div className={styles.auditItem}>

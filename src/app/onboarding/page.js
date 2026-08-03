@@ -22,7 +22,7 @@ function createSampleDocSvg(title, docRef, subtitle) {
     <rect x="120" y="520" width="560" height="260" fill="#1a2232" rx="6" stroke="#2a3448"/>
     <text x="150" y="565" font-family="sans-serif" font-size="13" font-weight="bold" fill="#4caf50">✓ AUDITED &amp; LOGGED TO VDR SECURITY VAULT</text>
     <text x="150" y="600" font-family="monospace" font-size="12" fill="#808c9e">Document Ref: ${docRef}</text>
-    <text x="150" y="625" font-family="monospace" font-size="12" fill="#808c9e">Security Level: ZERO TRUST / OWASP HARDENED</text>
+    <text x="150" y="625" font-family="monospace" font-size="12" fill="#808c9e">Security Level: RESTRICTED ACCESS / ENCRYPTED</text>
     <text x="150" y="650" font-family="monospace" font-size="12" fill="#808c9e">Encryption: AES-256 / SHA-256 HMAC</text>
     <text x="150" y="675" font-family="monospace" font-size="12" fill="#808c9e">Verification Hash: 0x8f2a91b4c3e78210984aef5d</text>
     <text x="150" y="700" font-family="monospace" font-size="12" fill="#808c9e">Audit Timestamp: 2026-07-30T14:22:00Z</text>

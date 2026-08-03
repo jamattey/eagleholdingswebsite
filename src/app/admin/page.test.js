@@ -76,9 +76,9 @@ describe('Executive Admin Portal Page', () => {
     fireEvent.click(screen.getByRole('button', { name: /✉️ Partner Invitations/i }));
     expect(screen.getByRole('heading', { level: 2, name: /Partner & Sponsor Invitation Manager/i })).toBeInTheDocument();
 
-    // Switch to OWASP Audit Stream tab
-    fireEvent.click(screen.getByRole('button', { name: /🛡️ OWASP Audit Stream/i }));
-    expect(screen.getByRole('heading', { level: 2, name: /OWASP Security Audit & Event Stream/i })).toBeInTheDocument();
+    // Switch to Security Audit Stream tab
+    fireEvent.click(screen.getByRole('button', { name: /🛡️ Security & Audit Stream/i }));
+    expect(screen.getByRole('heading', { level: 2, name: /System Security Audit & Event Stream/i })).toBeInTheDocument();
   });
 
   it('allows Admin to upload a new Partner Briefing for the Partner Portal', async () => {
