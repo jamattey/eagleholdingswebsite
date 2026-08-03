@@ -19,6 +19,7 @@ describe('Onboarding Portal Page', () => {
   });
 
   it('renders page header and compliance progress meter', async () => {
+    global.fetch.mockResolvedValue({ ok: true, json: async () => ({ authenticated: false, session: null }) });
     global.fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ authenticated: false, session: null }),
@@ -30,6 +31,7 @@ describe('Onboarding Portal Page', () => {
   });
 
   it('displays lock overlay and blur prompt when unauthenticated in Principal view', async () => {
+    global.fetch.mockResolvedValue({ ok: true, json: async () => ({ authenticated: false, session: null }) });
     global.fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ authenticated: false, session: null }),
@@ -38,14 +40,15 @@ describe('Onboarding Portal Page', () => {
     render(<OnboardingPage />);
     expect(screen.getByText(/Authentication Required to Access Data Room/i)).toBeInTheDocument();
 
-    const unlockBtn = screen.getByRole('button', { name: /Log In as Project Principal to Unlock/i });
+    const unlockBtn = screen.getByRole('button', { name: /Authenticate to Access Principal Workspace/i });
     expect(unlockBtn).toBeInTheDocument();
 
     fireEvent.click(unlockBtn);
-    expect(mockPush).toHaveBeenCalledWith('/principal-login');
+    expect(mockPush).toHaveBeenCalledWith('/login?type=principal');
   });
 
   it('removes blur overlay when authenticated session is present', async () => {
+    global.fetch.mockResolvedValue({ ok: true, json: async () => ({ authenticated: true, session: { sub: 'SPON-123', name: 'Metro Infra', role: 'PRINCIPAL' } }) });
     global.fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
@@ -61,7 +64,8 @@ describe('Onboarding Portal Page', () => {
     });
   });
 
-  it('renders compliance items for KYC, UBO, CIS, Architectural, MEP, Soil, and Permits', () => {
+  it('renders compliance items for KYC, UBO, CIS, Architectural, MEP, Soil, and Permits', async () => {
+    global.fetch.mockResolvedValue({ ok: true, json: async () => ({ authenticated: false, session: null }) });
     global.fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ authenticated: false, session: null }),
@@ -71,19 +75,22 @@ describe('Onboarding Portal Page', () => {
     expect(screen.getByText('Personal KYC & Passport Verification')).toBeInTheDocument();
     expect(screen.getByText('Ultimate Beneficial Owner (UBO) Disclosures')).toBeInTheDocument();
     expect(screen.getByText('Corporate Banking Credentials & CIS')).toBeInTheDocument();
-    expect(screen.getByText('Architectural & Structural Drawings')).toBeInTheDocument();
-    expect(screen.getByText('Mechanical, Electrical, & Plumbing (MEP) Plans')).toBeInTheDocument();
+    expect(screen.getByText('Architectural, Structural & MEP Drawings')).toBeInTheDocument();
+    expect(screen.getByText('Ghana Regulatory & Land Title Documentation')).toBeInTheDocument();
     expect(screen.getByText('Geotechnical & Soil Test Reports')).toBeInTheDocument();
-    expect(screen.getByText('Environmental & Municipal Building Permits')).toBeInTheDocument();
+    expect(screen.getByText('Environmental & Social Impact Assessment (ESIA)')).toBeInTheDocument();
   });
 
-  it('switches between Principal View and Admin View', () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ authenticated: false, session: null }),
+  it('switches between Principal View and Admin View', async () => {
+    global.fetch.mockImplementation(async (url) => {
+      if (url === '/api/auth/session') return { ok: true, json: async () => ({ authenticated: true, session: { role: 'ADMIN' } }) };
+      return { ok: true, json: async () => ({}) };
     });
 
     render(<OnboardingPage />);
+    
+    // Wait for session to load
+    await screen.findByRole('button', { name: /Admin View \(Backend\)/i });
 
     const adminRoleBtn = screen.getByRole('button', { name: /Admin View \(Backend\)/i });
     fireEvent.click(adminRoleBtn);
@@ -98,29 +105,20 @@ describe('Onboarding Portal Page', () => {
   });
 
   it('allows Admin to invite a new Project Principal and generate an invitation link', async () => {
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ authenticated: false, session: null }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          success: true,
-          action: 'invite_principal',
-          invitation: {
-            inviteCode: 'INV-998877',
-            inviteUrl: '/principal-login?invite=INV-998877',
-            sponsorName: 'Atlantic Port Systems',
-            email: 'sponsor@atlantic.com',
-            projectName: 'Port Expansion Facility',
-            facilityAmount: '$60,000,000 USD',
-            status: 'Pending Registration',
-          },
-        }),
-      });
+    global.fetch.mockImplementation(async (url, options) => {
+      if (url === '/api/auth/session') return { ok: true, json: async () => ({ authenticated: true, session: { role: 'ADMIN' } }) };
+      if (url === '/api/onboarding') return { ok: true, json: async () => ({
+        success: true,
+        action: 'invite_principal',
+        invitation: { inviteCode: 'INV-998877', inviteUrl: '/login?invite=INV-998877', sponsorName: 'Atlantic Port Systems', email: 'sponsor@atlantic.com', projectName: 'Port Expansion Facility', facilityAmount: '$60,000,000 USD', status: 'Pending Registration' }
+      }) };
+      return { ok: true, json: async () => ({}) };
+    });
 
     render(<OnboardingPage />);
+    
+    // Wait for session to load
+    await screen.findByRole('button', { name: /Admin View \(Backend\)/i });
 
     // Switch to Admin View
     fireEvent.click(screen.getByRole('button', { name: /Admin View \(Backend\)/i }));
@@ -136,27 +134,21 @@ describe('Onboarding Portal Page', () => {
       expect(screen.getByText(/Invitation link generated for Atlantic Port Systems/i)).toBeInTheDocument();
     });
 
-    expect(screen.getByText('/principal-login?invite=INV-998877')).toBeInTheDocument();
+    expect(screen.getByText('/login?invite=INV-998877')).toBeInTheDocument();
     expect(screen.getByText('Atlantic Port Systems')).toBeInTheDocument();
   });
 
   it('allows Admin to approve checklist items and update status', async () => {
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ authenticated: false, session: null }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          success: true,
-          action: 'admin_update_status',
-          itemId: 'item-03',
-          status: 'Verified',
-        }),
-      });
+    global.fetch.mockImplementation(async (url, options) => {
+      if (url === '/api/auth/session') return { ok: true, json: async () => ({ authenticated: true, session: { role: 'ADMIN' } }) };
+      if (url === '/api/onboarding') return { ok: true, json: async () => ({ success: true, action: 'admin_update_status', itemId: 'item-03', status: 'Verified' }) };
+      return { ok: true, json: async () => ({}) };
+    });
 
     render(<OnboardingPage />);
+    
+    // Wait for session to load
+    await screen.findByRole('button', { name: /Admin View \(Backend\)/i });
 
     // Switch to Admin View
     fireEvent.click(screen.getByRole('button', { name: /Admin View \(Backend\)/i }));
@@ -172,21 +164,16 @@ describe('Onboarding Portal Page', () => {
   });
 
   it('submits capital raise feedback in Principal view', async () => {
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ authenticated: false, session: null }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          success: true,
-          action: 'submit_feedback',
-          receiptId: 'FBK-ONBOARDING-1',
-        }),
-      });
+    global.fetch.mockImplementation(async (url, options) => {
+      if (url === '/api/auth/session') return { ok: true, json: async () => ({ authenticated: true, session: { role: 'PRINCIPAL' } }) };
+      if (url === '/api/onboarding') return { ok: true, json: async () => ({ success: true, action: 'submit_feedback', receiptId: 'FBK-ONBOARDING-1' }) };
+      return { ok: true, json: async () => ({}) };
+    });
 
     render(<OnboardingPage />);
+    
+    // Wait for component load
+    await screen.findByLabelText(/Sponsor Feedback & Term Sheet Queries/i);
 
     const textarea = screen.getByLabelText(/Sponsor Feedback & Term Sheet Queries/i);
     fireEvent.change(textarea, { target: { value: 'Requesting lower interest rate for senior tranche.' } });

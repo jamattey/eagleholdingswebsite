@@ -5,7 +5,7 @@ export default function robots() {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/partner-portal', '/onboarding', '/principal-login'], // hide API routes and sensitive portals from search engines
+      disallow: ['/api/', '/partner-portal', '/onboarding', '/login'], // hide API routes and sensitive portals from search engines
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

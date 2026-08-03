@@ -19,11 +19,7 @@ describe('Partner Portal Dashboard Page', () => {
   });
 
   it('renders restricted access notice when unauthenticated', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ authenticated: false, session: null }),
-    });
-
+    global.fetch.mockResolvedValue({ ok: true, json: async () => ({ authenticated: false, session: null }) });
     render(<PartnerPortalDashboard />);
 
     await waitFor(() => {
@@ -34,22 +30,14 @@ describe('Partner Portal Dashboard Page', () => {
     expect(loginBtn).toBeInTheDocument();
 
     fireEvent.click(loginBtn);
-    expect(mockPush).toHaveBeenCalledWith('/partner-login');
+    expect(mockPush).toHaveBeenCalledWith('/login?type=partner');
   });
 
   it('renders executive portal metrics and partner profile when session exists', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        authenticated: true,
-        session: {
-          sub: 'EAGLE-8821',
-          name: 'Strategic Global Capital Group',
-          clearance: 'Level 4 — Tier 1 Investor',
-        },
-      }),
-    });
-
+    global.fetch.mockResolvedValue({ ok: true, json: async () => ({
+      authenticated: true,
+      session: { sub: 'EAGLE-8821', name: 'Strategic Global Capital Group', clearance: 'Level 4 — Tier 1 Investor' }
+    }) });
     render(<PartnerPortalDashboard />);
 
     await waitFor(() => {
@@ -64,14 +52,10 @@ describe('Partner Portal Dashboard Page', () => {
   });
 
   it('renders strategic briefings and handles briefing download click', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        authenticated: true,
-        session: { name: 'Verified Partner', clearance: 'Level 4' },
-      }),
-    });
-
+    global.fetch.mockResolvedValue({ ok: true, json: async () => ({
+      authenticated: true,
+      session: { name: 'Verified Partner', clearance: 'Level 4' }
+    }) });
     render(<PartnerPortalDashboard />);
 
     await waitFor(() => {
@@ -89,20 +73,14 @@ describe('Partner Portal Dashboard Page', () => {
   });
 
   it('calls logout API and redirects to login when Sign Out is clicked', async () => {
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          authenticated: true,
-          session: { name: 'Verified Partner', clearance: 'Level 4' },
-        }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true }),
-      });
+    global.fetch.mockImplementation(async (url) => {
+      if (url === '/api/auth/session') return { ok: true, json: async () => ({ authenticated: true, session: { name: 'Verified Partner', clearance: 'Level 4' } }) };
+      if (url === '/api/auth/logout') return { ok: true, json: async () => ({ success: true }) };
+      return { ok: true, json: async () => ({}) };
+    });
 
     render(<PartnerPortalDashboard />);
+    await screen.findByText('Sign Out');
 
     await waitFor(() => {
       expect(screen.getByText('Sign Out')).toBeInTheDocument();
@@ -111,7 +89,7 @@ describe('Partner Portal Dashboard Page', () => {
     fireEvent.click(screen.getByRole('button', { name: /Sign Out/i }));
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/partner-login');
+      expect(mockPush).toHaveBeenCalledWith('/login?type=partner');
     });
   });
 });

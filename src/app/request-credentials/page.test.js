@@ -1,9 +1,21 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
+
 import RequestCredentials from './page';
 
 describe('Request Credentials Page', () => {
   beforeEach(() => {
-    global.fetch = jest.fn();
+    global.fetch = jest.fn().mockImplementation(async (url) => {
+      if (url === '/api/auth/session') {
+        return { ok: true, json: async () => ({ authenticated: false, session: null }) };
+      }
+      return { ok: true, json: async () => ({}) };
+    });
   });
 
   afterEach(() => {
@@ -69,9 +81,11 @@ describe('Request Credentials Page', () => {
   });
 
   it('submits the form successfully and displays reference ID and confirmation', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ success: true, referenceId: 'REQ-123456-ABC' }),
+    global.fetch.mockImplementation(async (url) => {
+      if (url === '/api/auth/session') {
+        return { ok: true, json: async () => ({ authenticated: false, session: null }) };
+      }
+      return { ok: true, json: async () => ({ success: true, referenceId: 'REQ-123456-ABC' }) };
     });
 
     render(<RequestCredentials />);
@@ -97,9 +111,11 @@ describe('Request Credentials Page', () => {
   });
 
   it('displays an error message when form submission fails', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ error: 'Corporate email is already registered.' }),
+    global.fetch.mockImplementation(async (url) => {
+      if (url === '/api/auth/session') {
+        return { ok: true, json: async () => ({ authenticated: false, session: null }) };
+      }
+      return { ok: false, json: async () => ({ error: 'Corporate email is already registered.' }) };
     });
 
     render(<RequestCredentials />);

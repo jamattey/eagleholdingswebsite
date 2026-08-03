@@ -15,10 +15,10 @@ export default function sitemap() {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/partner-login`,
+      url: `${baseUrl}/login`,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
+      changeFrequency: 'monthly',
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/request-credentials`,

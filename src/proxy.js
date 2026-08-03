@@ -13,7 +13,8 @@ export async function proxy(request) {
   // Protect Partner Portal route
   if (pathname.startsWith('/partner-portal')) {
     if (!session) {
-      const loginUrl = new URL('/partner-login', request.url);
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('type', 'partner');
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }

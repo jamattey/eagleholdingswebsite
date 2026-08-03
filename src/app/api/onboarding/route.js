@@ -116,7 +116,7 @@ export async function POST(request) {
       }
 
       const inviteCode = `INV-${Math.floor(100000 + Math.random() * 900000)}`;
-      const inviteUrl = `/principal-login?invite=${inviteCode}`;
+      const inviteUrl = `/login?invite=${inviteCode}`;
 
       securityLog('ADMIN_INVITE_PRINCIPAL', { sponsorName, email, projectName, inviteCode, ip: clientIp });
 

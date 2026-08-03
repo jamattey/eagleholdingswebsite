@@ -471,10 +471,10 @@ export default function OnboardingPage() {
                 <span style={{ fontSize: '0.88rem', opacity: 0.8 }}>Log in with your sponsor credentials to access your saved project data room and custom term sheets.</span>
               </div>
               <button 
-                onClick={() => router.push('/principal-login')}
-                className={styles.copyBtn}
+                onClick={() => router.push('/login?type=principal')}
+                className={styles.loginBtn}
               >
-                Go to Principal Login →
+                Login as Principal to Access
               </button>
             </div>
           )}
@@ -636,10 +636,10 @@ export default function OnboardingPage() {
                     Detailed compliance intake checklists, technical specifications, and Virtual Data Room dropzones are restricted to verified project principals.
                   </p>
                   <button 
-                    onClick={() => router.push('/principal-login')}
-                    className={styles.unlockBtn}
+                    onClick={() => router.push('/login?type=principal')}
+                    className={styles.blurLoginBtn}
                   >
-                    Log In as Project Principal to Unlock
+                    Authenticate to Access Principal Workspace
                   </button>
                 </div>
               )}

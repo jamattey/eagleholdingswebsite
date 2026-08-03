@@ -66,7 +66,7 @@ export default function PartnerPortalDashboard() {
       console.error('Sign out error:', err);
     }
     setPartnerSession(null);
-    router.push('/partner-login');
+    router.push('/login?type=partner');
   };
 
   const handleDownload = (title) => {
@@ -100,7 +100,7 @@ export default function PartnerPortalDashboard() {
               Authentication is required to view confidential partner briefings and strategic project data.
             </p>
             <button 
-              onClick={() => router.push('/partner-login')} 
+              onClick={() => router.push('/login?type=partner')} 
               className={styles.loginPromptBtn}
             >
               Authenticate at Partner Login

@@ -88,11 +88,8 @@ export default function Header() {
               </>
             ) : (
               <>
-                <Link href="/partner-login" className={styles.buttonPrimary}>
-                  Partner Login
-                </Link>
-                <Link href="/principal-login" className={styles.buttonPrimary}>
-                  Principal Login
+                <Link href="/login" className={styles.buttonPrimary}>
+                  Login
                 </Link>
                 <Link href="/onboarding" className={styles.buttonPrimary}>
                   Onboarding
@@ -140,11 +137,8 @@ export default function Header() {
           </>
         ) : (
           <>
-            <Link href="/partner-login" className={styles.mobileNavLink} onClick={closeMobileMenu}>
-              Partner Login
-            </Link>
-            <Link href="/principal-login" className={styles.mobileNavLink} onClick={closeMobileMenu}>
-              Principal Login
+            <Link href="/login" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+              Login
             </Link>
             <Link href="/onboarding" className={styles.mobileNavLink} onClick={closeMobileMenu}>
               Onboarding
