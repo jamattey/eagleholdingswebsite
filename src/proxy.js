@@ -1,16 +1,17 @@
-// src/middleware.js
-// Next.js Edge Middleware — OWASP Zero Trust Route Security Guard with Strict Role Siloing.
+// src/proxy.js
+// Next.js Edge Proxy — OWASP Zero Trust Route Security Guard with Strict Role Siloing.
+// This file is automatically loaded by Next.js and runs on the Edge before every matched request.
 
 import { NextResponse } from 'next/server';
 import { verifyJwt } from '@/lib/jwt';
 
 export async function proxy(request) {
   const { pathname } = request.nextUrl;
-  
+
   const token = request.cookies.get('eagle_session')?.value;
   const session = token ? await verifyJwt(token) : null;
 
-  // Protect Partner Portal route
+  // ─── Protect Partner Portal ──────────────────────────────────────────────────
   if (pathname.startsWith('/partner-portal')) {
     if (!session) {
       const loginUrl = new URL('/login', request.url);
@@ -18,14 +19,17 @@ export async function proxy(request) {
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
-    
-    // Strict Siloing: Only PARTNER and ADMIN can access Partner Portal
+
+    // Strict Siloing: Only PARTNER and ADMIN can access Partner Portal.
+    // PRINCIPAL users are redirected to /unauthorized — they never see Partner data.
     if (session.role !== 'PARTNER' && session.role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }
 
-  // Protect Onboarding Portal route
+  // ─── Protect Onboarding Portal ───────────────────────────────────────────────
+  // This route is completely hidden from unauthenticated visitors and regular
+  // site traffic. No HTML, JS, or data is served until identity is verified.
   if (pathname.startsWith('/onboarding')) {
     if (!session) {
       const loginUrl = new URL('/login', request.url);
@@ -33,8 +37,9 @@ export async function proxy(request) {
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
-    
-    // Strict Siloing: Only PRINCIPAL and ADMIN can access Onboarding Portal
+
+    // Strict Siloing: Only PRINCIPAL and ADMIN can access Onboarding.
+    // PARTNER users are redirected to /unauthorized — they never see Principal data.
     if (session.role !== 'PRINCIPAL' && session.role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }

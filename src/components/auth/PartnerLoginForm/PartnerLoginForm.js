@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import styles from '../../login/page.module.css';
+import styles from '../auth.module.css';
 
 /**
  * PartnerLoginForm

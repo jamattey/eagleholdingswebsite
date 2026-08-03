@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from '../../login/page.module.css';
+import styles from '../auth.module.css';
 
 /**
  * PrincipalLoginForm
