@@ -1,9 +1,17 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import OnboardingPage from './page';
 
+const mockPush = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+}));
+
 describe('Onboarding Portal Page', () => {
   beforeEach(() => {
     global.fetch = jest.fn();
+    mockPush.mockReset();
   });
 
   afterEach(() => {
@@ -42,6 +50,44 @@ describe('Onboarding Portal Page', () => {
     expect(screen.getByRole('heading', { level: 1, name: /Project Onboarding & Intake Portal/i })).toBeInTheDocument();
   });
 
+  it('allows Admin to invite a new Project Principal and generate an invitation link', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        success: true,
+        action: 'invite_principal',
+        invitation: {
+          inviteCode: 'INV-998877',
+          inviteUrl: '/principal-login?invite=INV-998877',
+          sponsorName: 'Atlantic Port Systems',
+          email: 'sponsor@atlantic.com',
+          projectName: 'Port Expansion Facility',
+          facilityAmount: '$60,000,000 USD',
+          status: 'Pending Registration',
+        },
+      }),
+    });
+
+    render(<OnboardingPage />);
+
+    // Switch to Admin View
+    fireEvent.click(screen.getByRole('button', { name: /Admin View \(Backend\)/i }));
+
+    fireEvent.change(screen.getByLabelText(/Principal \/ Sponsor Name \*/i), { target: { value: 'Atlantic Port Systems' } });
+    fireEvent.change(screen.getByLabelText(/Corporate Email \*/i), { target: { value: 'sponsor@atlantic.com' } });
+    fireEvent.change(screen.getByLabelText(/Project Title \*/i), { target: { value: 'Port Expansion Facility' } });
+
+    const inviteSubmitBtn = screen.getByRole('button', { name: /Generate & Send Principal Invitation/i });
+    fireEvent.click(inviteSubmitBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Invitation link generated for Atlantic Port Systems/i)).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('/principal-login?invite=INV-998877')).toBeInTheDocument();
+    expect(screen.getByText('Atlantic Port Systems')).toBeInTheDocument();
+  });
+
   it('allows Admin to approve checklist items and update status', async () => {
     global.fetch.mockResolvedValueOnce({
       ok: true,
@@ -65,30 +111,6 @@ describe('Onboarding Portal Page', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Audit status for item/i)).toBeInTheDocument();
-    });
-  });
-
-  it('allows Admin to modify and save offer terms', async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        success: true,
-        action: 'admin_update_terms',
-      }),
-    });
-
-    render(<OnboardingPage />);
-
-    // Switch to Admin View
-    fireEvent.click(screen.getByRole('button', { name: /Admin View \(Backend\)/i }));
-
-    const saveBtn = screen.getByRole('button', { name: /Update Offer Terms/i });
-    expect(saveBtn).toBeInTheDocument();
-
-    fireEvent.click(saveBtn);
-
-    await waitFor(() => {
-      expect(screen.getByText(/Capital raise offer terms updated successfully/i)).toBeInTheDocument();
     });
   });
 

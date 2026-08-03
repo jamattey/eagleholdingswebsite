@@ -19,7 +19,7 @@ export async function POST(request) {
   try {
     const rawBody = await request.json();
     const body = sanitizeInput(rawBody);
-    const { action, role, itemId, newStatus, documentName, fileSize, feedbackText, targetCapital, preferredTerms, ltvRatio } = body;
+    const { action, role, itemId, newStatus, documentName, fileSize, feedbackText, targetCapital, preferredTerms, ltvRatio, sponsorName, email, projectName, facilityAmount } = body;
 
     // Principal Action: Uploading a document into Data Room
     if (action === 'upload_document') {
@@ -81,6 +81,33 @@ export async function POST(request) {
         action: 'admin_update_terms',
         updatedTerms: { targetCapital, preferredTerms, ltvRatio },
         updatedAt: new Date().toISOString(),
+      });
+    }
+
+    // Admin Action: Invite Project Principal
+    if (action === 'invite_principal') {
+      if (!sponsorName || !email || !projectName) {
+        return Response.json({ error: 'Sponsor Name, Corporate Email, and Project Name are required.' }, { status: 400 });
+      }
+
+      const inviteCode = `INV-${Math.floor(100000 + Math.random() * 900000)}`;
+      const inviteUrl = `/principal-login?invite=${inviteCode}`;
+
+      securityLog('ADMIN_INVITE_PRINCIPAL', { sponsorName, email, projectName, inviteCode, ip: clientIp });
+
+      return Response.json({
+        success: true,
+        action: 'invite_principal',
+        invitation: {
+          inviteCode,
+          inviteUrl,
+          sponsorName,
+          email,
+          projectName,
+          facilityAmount: facilityAmount || '$50,000,000 USD',
+          invitedAt: new Date().toISOString(),
+          status: 'Pending Registration',
+        },
       });
     }
 

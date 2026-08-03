@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import styles from "./page.module.css";
 
 const initialChecklist = [
-  // Category 1: Entity & Principal Compliance
   {
     id: 'item-01',
     category: 'entity',
@@ -43,8 +43,6 @@ const initialChecklist = [
     status: 'Action Required',
     ref: 'DOC-SOF-PENDING',
   },
-
-  // Category 2: Project Technical Compliance
   {
     id: 'item-05',
     category: 'project',
@@ -83,16 +81,39 @@ const initialChecklist = [
   },
 ];
 
+const initialPipeline = [
+  {
+    inviteCode: 'INV-882104',
+    sponsorName: 'Metro Civil Infrastructure Group',
+    email: 'contact@metro-civil.com',
+    projectName: 'High-Density Mobility Hub Phase I',
+    facilityAmount: '$50,000,000 USD',
+    invitedAt: '2026-08-01 14:30',
+    status: 'Registered & Active',
+  },
+  {
+    inviteCode: 'INV-401923',
+    sponsorName: 'Pacific Rim Energy Developers',
+    email: 'capital@pacific-energy.org',
+    projectName: 'Regional Deepwater Civil Asset',
+    facilityAmount: '$75,000,000 USD',
+    invitedAt: '2026-08-02 09:15',
+    status: 'Pending Registration',
+  },
+];
+
 export default function OnboardingPage() {
+  const router = useRouter();
   const [userRole, setUserRole] = useState('principal'); // 'principal' | 'admin'
-  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'entity' | 'project'
+  const [principalSession, setPrincipalSession] = useState(null);
+  const [activeTab, setActiveTab] = useState('all');
   const [checklist, setChecklist] = useState(initialChecklist);
   const [uploadNotice, setUploadNotice] = useState('');
   const [feedbackText, setFeedbackText] = useState('');
   const [feedbackStatus, setFeedbackStatus] = useState('idle');
   const [feedbackReceipt, setFeedbackReceipt] = useState('');
-  
-  // Offer terms state (editable by Admin)
+
+  // Admin offer terms state
   const [offerTerms, setOfferTerms] = useState({
     targetCapital: '$50,000,000 USD',
     preferredTerms: '8.5% p.a.',
@@ -100,6 +121,33 @@ export default function OnboardingPage() {
     advisoryTerm: '36 Months',
   });
   const [adminNotice, setAdminNotice] = useState('');
+
+  // Admin invite principal state
+  const [inviteForm, setInviteForm] = useState({
+    sponsorName: '',
+    email: '',
+    projectName: '',
+    facilityAmount: '$50,000,000 USD',
+  });
+  const [pipeline, setPipeline] = useState(initialPipeline);
+  const [latestInvite, setLatestInvite] = useState(null);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = 
+        sessionStorage.getItem('eagle_principal_session') || 
+        localStorage.getItem('eagle_principal_session');
+
+      if (stored) {
+        try {
+          setPrincipalSession(JSON.parse(stored));
+        } catch {
+          setPrincipalSession(null);
+        }
+      }
+    }
+  }, []);
 
   // Calculate compliance progress percentage
   const totalItems = checklist.length;
@@ -229,6 +277,49 @@ export default function OnboardingPage() {
     }
   };
 
+  // Admin invite principal submission
+  const handleInviteSubmit = async (e) => {
+    e.preventDefault();
+    if (!inviteForm.sponsorName || !inviteForm.email || !inviteForm.projectName) return;
+
+    try {
+      const res = await fetch('/api/onboarding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'invite_principal',
+          ...inviteForm,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        const inv = data.invitation;
+        setLatestInvite(inv);
+        setPipeline((prev) => [inv, ...prev]);
+        setInviteForm({
+          sponsorName: '',
+          email: '',
+          projectName: '',
+          facilityAmount: '$50,000,000 USD',
+        });
+        setAdminNotice(`Invitation link generated for ${inv.sponsorName}. Email dispatched to ${inv.email}.`);
+        setTimeout(() => setAdminNotice(''), 6000);
+      }
+    } catch (err) {
+      console.error('Invite principal error:', err);
+    }
+  };
+
+  const copyInviteLink = () => {
+    if (!latestInvite) return;
+    const fullUrl = `${window.location.origin}${latestInvite.inviteUrl}`;
+    navigator.clipboard.writeText(fullUrl);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 4000);
+  };
+
   return (
     <>
       <meta name="robots" content="noindex, nofollow" />
@@ -268,7 +359,7 @@ export default function OnboardingPage() {
             </h1>
             <p className={styles.pageSubtitle}>
               {userRole === 'admin' 
-                ? 'Backend deal review interface for Eagle Holdings advisors to audit sponsor compliance submissions, approve Data Room credentials, and adjust capital raise offer terms.'
+                ? 'Backend deal review interface for Eagle Holdings advisors to audit sponsor compliance submissions, send principal invitations, and adjust capital raise offer terms.'
                 : 'Streamlined project intake, real-time compliance clearance tracking, and capital raise offer feedback for project principals and sponsors.'}
             </p>
 
@@ -311,6 +402,150 @@ export default function OnboardingPage() {
               fontSize: '0.9rem',
             }}>
               🛡️ {adminNotice}
+            </div>
+          )}
+
+          {/* Prompt if in Principal Mode without explicit login session */}
+          {userRole === 'principal' && !principalSession && (
+            <div style={{
+              padding: '16px 22px',
+              background: 'rgba(168, 140, 58, 0.08)',
+              border: '1px dashed var(--gold)',
+              borderRadius: '6px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '16px',
+            }}>
+              <div>
+                <strong style={{ color: 'var(--gold)', display: 'block', marginBottom: '4px' }}>Project Principal Login Recommended</strong>
+                <span style={{ fontSize: '0.88rem', opacity: 0.8 }}>Log in with your sponsor credentials to access your saved project data room and custom term sheets.</span>
+              </div>
+              <button 
+                onClick={() => router.push('/principal-login')}
+                className={styles.copyBtn}
+              >
+                Go to Principal Login →
+              </button>
+            </div>
+          )}
+
+          {/* ─── Admin Feature: Invite Principal & Sponsor ─── */}
+          {userRole === 'admin' && (
+            <div className={styles.inviteCard}>
+              <div>
+                <span className={styles.itemCategory}>Sponsor Management</span>
+                <h2 className={styles.offerTitle}>Invite Project Principal to Onboarding</h2>
+                <p className={styles.offerSubtitle}>Generate a secure invitation link and dispatch onboarding credentials to a new project sponsor.</p>
+              </div>
+
+              <form className={styles.inviteForm} onSubmit={handleInviteSubmit}>
+                <div className={styles.inviteGrid}>
+                  <div className={styles.adminInputGroup}>
+                    <label className={styles.itemCategory} htmlFor="sponsorName">Principal / Sponsor Name *</label>
+                    <input 
+                      id="sponsorName"
+                      type="text"
+                      className={styles.adminInput}
+                      placeholder="e.g. Apex Civil Infrastructure"
+                      value={inviteForm.sponsorName}
+                      onChange={(e) => setInviteForm({ ...inviteForm, sponsorName: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className={styles.adminInputGroup}>
+                    <label className={styles.itemCategory} htmlFor="email">Corporate Email *</label>
+                    <input 
+                      id="email"
+                      type="email"
+                      className={styles.adminInput}
+                      placeholder="sponsor@company.com"
+                      value={inviteForm.email}
+                      onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className={styles.adminInputGroup}>
+                    <label className={styles.itemCategory} htmlFor="projectName">Project Title *</label>
+                    <input 
+                      id="projectName"
+                      type="text"
+                      className={styles.adminInput}
+                      placeholder="e.g. Deepwater Terminal Expansion"
+                      value={inviteForm.projectName}
+                      onChange={(e) => setInviteForm({ ...inviteForm, projectName: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className={styles.adminInputGroup}>
+                    <label className={styles.itemCategory} htmlFor="facilityAmount">Target Facility</label>
+                    <input 
+                      id="facilityAmount"
+                      type="text"
+                      className={styles.adminInput}
+                      placeholder="$50,000,000 USD"
+                      value={inviteForm.facilityAmount}
+                      onChange={(e) => setInviteForm({ ...inviteForm, facilityAmount: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" className={styles.adminSaveBtn} style={{ alignSelf: 'flex-start' }}>
+                  Generate & Send Principal Invitation
+                </button>
+              </form>
+
+              {/* Generated Invite Link Banner */}
+              {latestInvite && (
+                <div className={styles.inviteResultBanner}>
+                  <div>
+                    <span style={{ fontSize: '0.8rem', opacity: 0.7, display: 'block' }}>Active Invitation Link for {latestInvite.sponsorName}:</span>
+                    <span className={styles.copyBadge}>{latestInvite.inviteUrl}</span>
+                  </div>
+                  <button type="button" onClick={copyInviteLink} className={styles.copyBtn}>
+                    {copiedLink ? '✓ Copied Link!' : 'Copy Full Invitation Link'}
+                  </button>
+                </div>
+              )}
+
+              {/* Invited Pipeline Table */}
+              <div>
+                <h3 className={styles.itemTitle} style={{ fontSize: '1.2rem', marginBottom: '12px' }}>Invited Sponsors Pipeline</h3>
+                <table className={styles.pipelineTable}>
+                  <thead>
+                    <tr>
+                      <th>Sponsor Entity</th>
+                      <th>Project Title</th>
+                      <th>Target Facility</th>
+                      <th>Invite Code</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pipeline.map((item, idx) => (
+                      <tr key={idx}>
+                        <td><strong>{item.sponsorName}</strong><br /><span style={{ opacity: 0.6, fontSize: '0.78rem' }}>{item.email}</span></td>
+                        <td>{item.projectName}</td>
+                        <td>{item.facilityAmount}</td>
+                        <td><code style={{ color: 'var(--gold)' }}>{item.inviteCode}</code></td>
+                        <td>
+                          <span className={`
+                            ${styles.statusBadge} 
+                            ${item.status.includes('Active') ? styles.statusVerified : styles.statusAudit}
+                          `}>
+                            {item.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
             </div>
           )}
 
