@@ -572,61 +572,79 @@ export default function OnboardingPage() {
               </button>
             </div>
 
-            {/* Checklist Items Grid */}
-            <div className={styles.checklistGrid} style={{ marginTop: '30px' }}>
-              {filteredChecklist.map((item) => (
-                <div key={item.id} className={styles.checklistItem}>
-                  <div>
-                    <div className={styles.itemHeader}>
-                      <div>
-                        <span className={styles.itemCategory}>{item.categoryLabel}</span>
-                        <h3 className={styles.itemTitle}>{item.title}</h3>
-                      </div>
-                      <span className={`
-                        ${styles.statusBadge} 
-                        ${item.status === 'Verified' ? styles.statusVerified : ''}
-                        ${item.status === 'Under Audit' ? styles.statusAudit : ''}
-                        ${item.status === 'Action Required' ? styles.statusAction : ''}
-                        ${item.status === 'Pending Upload' ? styles.statusPending : ''}
-                      `}>
-                        {item.status}
-                      </span>
-                    </div>
-                    <p className={styles.itemDescription}>{item.description}</p>
-                  </div>
-
-                  <div className={styles.itemFooter}>
-                    <span className={styles.docRef}>Ref: {item.ref}</span>
-
-                    {/* Role-Based Item Footer Controls */}
-                    {userRole === 'admin' ? (
-                      <div className={styles.adminControls}>
-                        <button 
-                          onClick={() => handleAdminStatusChange(item.id, 'Verified')}
-                          className={styles.adminApproveBtn}
-                        >
-                          Approve ✓
-                        </button>
-                        <button 
-                          onClick={() => handleAdminStatusChange(item.id, 'Action Required')}
-                          className={styles.adminActionBtn}
-                        >
-                          Flag Action ⚠️
-                        </button>
-                      </div>
-                    ) : (
-                      <label className={styles.uploadLabel}>
-                        <span>{item.status === 'Verified' ? 'Re-upload' : 'Upload Document'}</span>
-                        <input 
-                          type="file" 
-                          className={styles.hiddenInput}
-                          onChange={(e) => handleFileUpload(e, item.id)}
-                        />
-                      </label>
-                    )}
-                  </div>
+            {/* Checklist Items Grid (Blurry for unauthenticated visitors) */}
+            <div className={userRole === 'principal' && !principalSession ? styles.blurredContainer : ''}>
+              {userRole === 'principal' && !principalSession && (
+                <div className={styles.blurOverlay}>
+                  <div className={styles.overlayLockIcon}>🔒</div>
+                  <h3 className={styles.overlayTitle}>Authentication Required to Access Data Room</h3>
+                  <p className={styles.overlayText}>
+                    Detailed compliance intake checklists, technical specifications, and Virtual Data Room dropzones are restricted to verified project principals.
+                  </p>
+                  <button 
+                    onClick={() => router.push('/principal-login')}
+                    className={styles.unlockBtn}
+                  >
+                    Log In as Project Principal to Unlock
+                  </button>
                 </div>
-              ))}
+              )}
+
+              <div className={`${styles.checklistGrid} ${userRole === 'principal' && !principalSession ? styles.blurredGrid : ''}`} style={{ marginTop: '30px' }}>
+                {filteredChecklist.map((item) => (
+                  <div key={item.id} className={styles.checklistItem}>
+                    <div>
+                      <div className={styles.itemHeader}>
+                        <div>
+                          <span className={styles.itemCategory}>{item.categoryLabel}</span>
+                          <h3 className={styles.itemTitle}>{item.title}</h3>
+                        </div>
+                        <span className={`
+                          ${styles.statusBadge} 
+                          ${item.status === 'Verified' ? styles.statusVerified : ''}
+                          ${item.status === 'Under Audit' ? styles.statusAudit : ''}
+                          ${item.status === 'Action Required' ? styles.statusAction : ''}
+                          ${item.status === 'Pending Upload' ? styles.statusPending : ''}
+                        `}>
+                          {item.status}
+                        </span>
+                      </div>
+                      <p className={styles.itemDescription}>{item.description}</p>
+                    </div>
+
+                    <div className={styles.itemFooter}>
+                      <span className={styles.docRef}>Ref: {item.ref}</span>
+
+                      {/* Role-Based Item Footer Controls */}
+                      {userRole === 'admin' ? (
+                        <div className={styles.adminControls}>
+                          <button 
+                            onClick={() => handleAdminStatusChange(item.id, 'Verified')}
+                            className={styles.adminApproveBtn}
+                          >
+                            Approve ✓
+                          </button>
+                          <button 
+                            onClick={() => handleAdminStatusChange(item.id, 'Action Required')}
+                            className={styles.adminActionBtn}
+                          >
+                            Flag Action ⚠️
+                          </button>
+                        </div>
+                      ) : (
+                        <label className={styles.uploadLabel}>
+                          <span>{item.status === 'Verified' ? 'Re-upload' : 'Upload Document'}</span>
+                          <input 
+                            type="file" 
+                            className={styles.hiddenInput}
+                            onChange={(e) => handleFileUpload(e, item.id)}
+                          />
+                        </label>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

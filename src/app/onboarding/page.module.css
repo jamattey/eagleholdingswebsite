@@ -211,6 +211,78 @@
   border-bottom-color: var(--gold);
 }
 
+/* ─── Blurred State for Unauthenticated Visitors ─── */
+.blurredContainer {
+  position: relative;
+}
+
+.blurredGrid {
+  filter: blur(8px);
+  opacity: 0.35;
+  pointer-events: none;
+  user-select: none;
+  transition: filter 0.4s ease, opacity 0.4s ease;
+}
+
+.blurOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 12, 0.75);
+  backdrop-filter: blur(4px);
+  padding: 40px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--gold);
+  text-align: center;
+  box-shadow: 0 0 50px rgba(168, 140, 58, 0.15);
+}
+
+.overlayLockIcon {
+  font-size: 2.8rem;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.overlayTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--white);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.overlayText {
+  font-size: 0.95rem;
+  color: var(--platinum);
+  opacity: 0.8;
+  max-width: 480px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.unlockBtn {
+  background: var(--gold);
+  color: var(--obsidian);
+  padding: 12px 28px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.unlockBtn:hover {
+  opacity: 0.88;
+}
+
 /* ─── Checklist Grid ─── */
 .checklistGrid {
   display: grid;

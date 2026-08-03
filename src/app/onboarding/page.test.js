@@ -12,6 +12,8 @@ describe('Onboarding Portal Page', () => {
   beforeEach(() => {
     global.fetch = jest.fn();
     mockPush.mockReset();
+    sessionStorage.clear();
+    localStorage.clear();
   });
 
   afterEach(() => {
@@ -22,6 +24,25 @@ describe('Onboarding Portal Page', () => {
     render(<OnboardingPage />);
     expect(screen.getByRole('heading', { level: 1, name: /Project Onboarding & Intake Portal/i })).toBeInTheDocument();
     expect(screen.getByText(/Overall Project Compliance Clearance Status/i)).toBeInTheDocument();
+  });
+
+  it('displays lock overlay and blur prompt when unauthenticated in Principal view', () => {
+    render(<OnboardingPage />);
+    expect(screen.getByText(/Authentication Required to Access Data Room/i)).toBeInTheDocument();
+
+    const unlockBtn = screen.getByRole('button', { name: /Log In as Project Principal to Unlock/i });
+    expect(unlockBtn).toBeInTheDocument();
+
+    fireEvent.click(unlockBtn);
+    expect(mockPush).toHaveBeenCalledWith('/principal-login');
+  });
+
+  it('removes blur overlay when authenticated session is present', () => {
+    const session = JSON.stringify({ token: 'SPON-123', principal: { name: 'Metro Infra' } });
+    sessionStorage.setItem('eagle_principal_session', session);
+
+    render(<OnboardingPage />);
+    expect(screen.queryByText(/Authentication Required to Access Data Room/i)).not.toBeInTheDocument();
   });
 
   it('renders compliance items for KYC, UBO, CIS, Architectural, MEP, Soil, and Permits', () => {
