@@ -53,6 +53,7 @@ export default function AdminPortalPage() {
     title: '',
     category: 'Strategic Briefing',
     fileName: '',
+    taggedDealRef: '',
   });
 
   // Invite Partner Form State
@@ -97,6 +98,8 @@ export default function AdminPortalPage() {
     e.preventDefault();
     if (!briefingForm.title || !briefingForm.fileName) return;
 
+    const matchedDeal = deals.find(d => d.dealReference === briefingForm.taggedDealRef);
+
     try {
       const res = await fetch('/api/admin', {
         method: 'POST',
@@ -106,6 +109,8 @@ export default function AdminPortalPage() {
           briefingTitle: briefingForm.title,
           briefingCategory: briefingForm.category,
           briefingFileName: briefingForm.fileName,
+          taggedDealRef: briefingForm.taggedDealRef || null,
+          taggedDealName: matchedDeal ? `${matchedDeal.partnerName} (${matchedDeal.documentTitle})` : null,
         }),
       });
 
@@ -113,7 +118,7 @@ export default function AdminPortalPage() {
 
       if (res.ok && data.success) {
         setPartnerBriefings(prev => [data.briefing, ...prev]);
-        setBriefingForm({ title: '', category: 'Strategic Briefing', fileName: '' });
+        setBriefingForm({ title: '', category: 'Strategic Briefing', fileName: '', taggedDealRef: '' });
         setNotice(`Partner briefing "${data.briefing.title}" uploaded and published to Partner Portal.`);
         setTimeout(() => setNotice(''), 6000);
       }
@@ -464,7 +469,23 @@ export default function AdminPortalPage() {
                       required
                     />
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                  <div className={styles.inputGroup}>
+                    <label className={styles.inputLabel} htmlFor="taggedDealRef">Tag Specific Deal / Mandate (Optional)</label>
+                    <select
+                      id="taggedDealRef"
+                      className={styles.inputField}
+                      value={briefingForm.taggedDealRef}
+                      onChange={e => setBriefingForm({ ...briefingForm, taggedDealRef: e.target.value })}
+                    >
+                      <option value="">-- Global Portfolio (Untagged) --</option>
+                      {deals.map(deal => (
+                        <option key={deal.dealReference} value={deal.dealReference}>
+                          {deal.dealReference} · {deal.partnerName} ({deal.documentTitle})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gridColumn: '1 / -1' }}>
                     <button type="submit" className={styles.submitBtn}>
                       Publish Briefing to Partner Portal →
                     </button>
@@ -481,6 +502,7 @@ export default function AdminPortalPage() {
                       <th>Reference</th>
                       <th>Briefing Title</th>
                       <th>Category</th>
+                      <th>Tagged Mandate / Deal</th>
                       <th>File Name</th>
                       <th>Published Date</th>
                       <th>Status</th>
@@ -492,6 +514,15 @@ export default function AdminPortalPage() {
                         <td><code style={{ color: 'var(--gold)' }}>{brf.ref}</code></td>
                         <td><strong>{brf.title}</strong></td>
                         <td><span className={styles.inputLabel} style={{ opacity: 0.8 }}>{brf.category}</span></td>
+                        <td>
+                          {brf.taggedDealRef ? (
+                            <span className={styles.statusAudit} style={{ fontSize: '0.72rem' }}>
+                              🏷️ {brf.taggedDealRef}
+                            </span>
+                          ) : (
+                            <span style={{ opacity: 0.5, fontSize: '0.78rem' }}>Global</span>
+                          )}
+                        </td>
                         <td><span style={{ opacity: 0.65, fontSize: '0.8rem', fontFamily: 'monospace' }}>{brf.fileName}</span></td>
                         <td style={{ fontSize: '0.78rem', opacity: 0.7 }}>{brf.uploadedAt}</td>
                         <td>

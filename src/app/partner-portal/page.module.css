@@ -373,29 +373,337 @@
   opacity: 0.85;
 }
 
-/* ─── Responsive ─── */
+/* ─── IR Navigation Tabs ─── */
+.irNavTabs {
+  display: flex;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-faint);
+  border-radius: 8px;
+  padding: 6px;
+  flex-wrap: wrap;
+}
+
+.irNavBtn {
+  flex: 1;
+  min-width: 160px;
+  background: none;
+  border: none;
+  padding: 12px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0.55;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.25s ease;
+  text-align: center;
+}
+
+.irNavBtn:hover {
+  opacity: 0.88;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.activeIrNav {
+  background: var(--gold);
+  color: var(--obsidian);
+  opacity: 1;
+  box-shadow: 0 2px 12px rgba(168, 140, 58, 0.3);
+}
+
+.viewSection {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ─── Overview Card & Stats ─── */
+.overviewCard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-faint);
+  border-radius: 6px;
+  padding: 32px;
+}
+
+.overviewStatsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-very-faint);
+}
+
+.overviewStatItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.viewAllBtn {
+  background: none;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 8px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.viewAllBtn:hover {
+  background: var(--gold);
+  color: var(--obsidian);
+}
+
+/* ─── Deal Badges & Tagged Notes ─── */
+.dealTagBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  background: rgba(241, 196, 15, 0.15);
+  color: #f1c40f;
+  border: 1px solid rgba(241, 196, 15, 0.3);
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.taggedDealNote {
+  font-size: 0.78rem;
+  opacity: 0.75;
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid var(--gold);
+  border-radius: 2px;
+}
+
+/* ─── Syndicated Mandates Grid ─── */
+.mandatesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mandateCard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-faint);
+  border-radius: 8px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: border-color 0.3s ease;
+}
+
+.mandateCard:hover {
+  border-color: var(--gold);
+}
+
+.mandateHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mandateTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.sponsorName {
+  display: block;
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin-top: 2px;
+}
+
+.dealRefBadge {
+  font-family: monospace;
+  color: var(--gold);
+  background: rgba(168, 140, 58, 0.1);
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border-faint);
+  font-size: 0.85rem;
+}
+
+.mandateSummary {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+
+.mandateTermsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-faint);
+  padding: 16px 20px;
+  border-radius: 4px;
+}
+
+.mandateTermItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.termValue {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: var(--white);
+}
+
+.dealBriefingBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(168, 140, 58, 0.08);
+  border: 1px dashed var(--gold);
+  border-radius: 4px;
+  flex-wrap: wrap;
+}
+
+.quickDownloadBtn {
+  background: var(--gold);
+  color: var(--obsidian);
+  border: none;
+  padding: 6px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-left: auto;
+}
+
+.mandateFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-very-faint);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.statusVerified {
+  background: rgba(46, 204, 113, 0.12);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+/* ─── Briefings Filter Bar ─── */
+.filterGroup {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-faint);
+  color: var(--foreground);
+  padding: 6px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.filterBtn:hover {
+  border-color: var(--gold);
+}
+
+.activeFilter {
+  background: var(--gold);
+  color: var(--obsidian);
+  border-color: var(--gold);
+}
+
+/* ─── IR Webcasts & Governance ─── */
+.eventsCard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-faint);
+  border-radius: 6px;
+  padding: 24px;
+}
+
+.irTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.irTable th,
+.irTable td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-very-faint);
+  font-size: 0.88rem;
+}
+
+.irTable th {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.governanceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.govCard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-faint);
+  border-radius: 6px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 0.3s ease;
+}
+
+.govCard:hover {
+  border-color: var(--gold);
+}
+
 @media (max-width: 768px) {
-  .portalHeader {
-    padding: 140px var(--spacing-md) 40px;
-  }
-
-  .dashboardSection {
-    padding: 40px var(--spacing-md) 80px;
-  }
-
-  .headerContainer {
+  .irNavTabs {
     flex-direction: column;
-    align-items: flex-start;
   }
 
-  .userProfileCard {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .auditItem {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+  .irNavBtn {
+    min-width: unset;
   }
 }

@@ -56,8 +56,9 @@ export async function POST(request) {
     }
 
     // ─── UPLOAD PARTNER BRIEFING TO PARTNER DASHBOARD ──────────────────────────
-    // USER REQUIREMENT: "add the ability to upload partner briefings to partner dashboard"
+    // USER REQUIREMENT: "admin briefings should be able to tag specific deals where necessary"
     if (action === 'upload_partner_briefing') {
+      const { briefingTitle, briefingCategory, briefingFileName, taggedDealRef, taggedDealName } = body;
       if (!briefingTitle || !briefingFileName) {
         return Response.json({ error: 'Briefing Title and File Name are required.' }, { status: 400 });
       }
@@ -69,6 +70,8 @@ export async function POST(request) {
         briefingCategory: briefingCategory || 'Strategic Briefing',
         briefingFileName,
         briefingRef,
+        taggedDealRef: taggedDealRef || null,
+        taggedDealName: taggedDealName || null,
         adminUser: session.name || session.sub,
         ip: clientIp,
       });
@@ -82,6 +85,8 @@ export async function POST(request) {
           title: briefingTitle,
           category: briefingCategory || 'Strategic Briefing',
           fileName: briefingFileName,
+          taggedDealRef: taggedDealRef || null,
+          taggedDealName: taggedDealName || null,
           uploadedAt: new Date().toISOString(),
           uploadedBy: session.name || 'Eagle Holdings Admin',
           accessLevel: 'Restricted Partner Access',
