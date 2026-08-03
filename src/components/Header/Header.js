@@ -1,6 +1,7 @@
 'use client'; // DEVELOPER NOTE: Required because we use React state (useState) to manage the mobile hamburger menu open/close status.
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Header.module.css";
@@ -9,6 +10,30 @@ import ThemeToggle from "../ThemeToggle/ThemeToggle";
 export default function Header() {
   // State for tracking if the mobile dropdown menu is currently visible
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [session, setSession] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch('/api/auth/session')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated) {
+          setSession(data.session);
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setSession(null);
+      router.push('/');
+      router.refresh();
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -44,15 +69,39 @@ export default function Header() {
           <ThemeToggle />
           
           <div className={styles.desktopNav}>
-            <Link href="/partner-login" className={styles.buttonPrimary}>
-              Partner Login
-            </Link>
-            <Link href="/onboarding" className={styles.buttonPrimary}>
-              Onboarding
-            </Link>
-            <Link href="/contact" className={styles.buttonPrimary}>
-              Contact
-            </Link>
+            {session ? (
+              <>
+                <span className={styles.roleBadge}>{session.role} ACCESS</span>
+                {session.role === 'PARTNER' || session.role === 'ADMIN' ? (
+                  <Link href="/partner-portal" className={styles.buttonPrimary}>
+                    Partner Portal
+                  </Link>
+                ) : null}
+                {session.role === 'PRINCIPAL' || session.role === 'ADMIN' ? (
+                  <Link href="/onboarding" className={styles.buttonPrimary}>
+                    Onboarding Portal
+                  </Link>
+                ) : null}
+                <button onClick={handleLogout} className={styles.buttonSecondary}>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/partner-login" className={styles.buttonPrimary}>
+                  Partner Login
+                </Link>
+                <Link href="/principal-login" className={styles.buttonPrimary}>
+                  Principal Login
+                </Link>
+                <Link href="/onboarding" className={styles.buttonPrimary}>
+                  Onboarding
+                </Link>
+                <Link href="/contact" className={styles.buttonPrimary}>
+                  Contact
+                </Link>
+              </>
+            )}
           </div>
 
           <button 
@@ -68,15 +117,43 @@ export default function Header() {
       </div>
 
       <div className={`${styles.mobileNav} ${isMobileMenuOpen ? styles.mobileNavOpen : ''}`}>
-        <Link href="/partner-login" className={styles.mobileNavLink} onClick={closeMobileMenu}>
-          Partner Login
-        </Link>
-        <Link href="/onboarding" className={styles.mobileNavLink} onClick={closeMobileMenu}>
-          Onboarding
-        </Link>
-        <Link href="/contact" className={styles.mobileNavLink} onClick={closeMobileMenu}>
-          Contact
-        </Link>
+        {session ? (
+          <>
+            <div className={styles.mobileRoleBadge}>{session.role} ACCESS</div>
+            {session.role === 'PARTNER' || session.role === 'ADMIN' ? (
+              <Link href="/partner-portal" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+                Partner Portal
+              </Link>
+            ) : null}
+            {session.role === 'PRINCIPAL' || session.role === 'ADMIN' ? (
+              <Link href="/onboarding" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+                Onboarding Portal
+              </Link>
+            ) : null}
+            <button 
+              onClick={() => { handleLogout(); closeMobileMenu(); }} 
+              className={styles.mobileNavLink}
+              style={{ textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--foreground)' }}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link href="/partner-login" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+              Partner Login
+            </Link>
+            <Link href="/principal-login" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+              Principal Login
+            </Link>
+            <Link href="/onboarding" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+              Onboarding
+            </Link>
+            <Link href="/contact" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+              Contact
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );

@@ -168,6 +168,19 @@
   opacity: 1;
 }
 
+.roleBadge {
+  background: rgba(168, 140, 58, 0.1);
+  border: 1px solid rgba(168, 140, 58, 0.3);
+  color: var(--gold);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  margin-right: var(--spacing-sm);
+}
+
 /* 
  * DEVELOPER NOTE: MOBILE RESPONSIVENESS
  * At 768px, we switch to the mobile layout.
@@ -241,5 +254,18 @@
   
   .mobileNavLink:hover {
     color: var(--gold);
+  }
+
+  .mobileRoleBadge {
+    color: var(--gold);
+    padding: var(--spacing-md) 0;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-bottom: 1px solid var(--border-very-faint);
+    text-align: center;
+    background: rgba(168, 140, 58, 0.05);
   }
 }
