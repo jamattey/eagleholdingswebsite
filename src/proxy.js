@@ -49,7 +49,7 @@ export async function proxy(request) {
   if (pathname.startsWith('/admin') || pathname.startsWith('/admin-portal')) {
     if (!session) {
       const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('type', 'partner');
+      loginUrl.searchParams.set('type', 'admin');
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }

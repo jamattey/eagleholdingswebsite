@@ -1,0 +1,440 @@
+/* ==========================================
+   Executive Admin Portal — page.module.css
+   ========================================== */
+
+.main {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* ─── Hero / Header Strip ─── */
+.heroStrip {
+  position: relative;
+  background-color: var(--obsidian);
+  padding: 160px var(--spacing-xl) 50px;
+  border-bottom: 1px solid var(--border-faint);
+  overflow: hidden;
+}
+
+.bgGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--bg-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-faint) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.badgeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--gold);
+  box-shadow: 0 0 10px rgba(168, 140, 58, 0.6);
+}
+
+.pageTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  color: var(--white);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.pageSubtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--platinum);
+  opacity: 0.75;
+  max-width: 800px;
+}
+
+/* ─── KPI Stats Grid ─── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.statCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-faint);
+  padding: 20px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.statCard:hover {
+  border-color: var(--gold);
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.statVal {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.statSub {
+  font-size: 0.78rem;
+  opacity: 0.55;
+}
+
+/* ─── Container ─── */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 50px var(--spacing-xl) 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ─── Command Tabs ─── */
+.commandTabs {
+  display: flex;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-faint);
+  border-radius: 8px;
+  padding: 6px;
+  flex-wrap: wrap;
+}
+
+.commandBtn {
+  flex: 1;
+  min-width: 150px;
+  background: none;
+  border: none;
+  padding: 12px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0.55;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.25s ease;
+  text-align: center;
+}
+
+.commandBtn:hover {
+  opacity: 0.88;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.activeCommand {
+  background: var(--gold);
+  color: var(--obsidian);
+  opacity: 1;
+  box-shadow: 0 2px 12px rgba(168, 140, 58, 0.3);
+}
+
+/* ─── View Sections ─── */
+.viewSection {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ─── Section Header ─── */
+.sectionHeader {
+  border-bottom: 1px solid var(--border-faint);
+  padding-bottom: 16px;
+}
+
+.sectionTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 4px;
+}
+
+.sectionSubtitle {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* ─── Tables ─── */
+.adminTableCard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-faint);
+  border-radius: 6px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pipelineTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.pipelineTable th,
+.pipelineTable td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-very-faint);
+  font-size: 0.85rem;
+}
+
+.pipelineTable th {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+/* ─── Status Badges ─── */
+.statusBadge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.statusVerified {
+  background: rgba(46, 204, 113, 0.12);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.statusAudit {
+  background: rgba(241, 196, 15, 0.12);
+  color: #f1c40f;
+  border: 1px solid rgba(241, 196, 15, 0.3);
+}
+
+.statusAction {
+  background: rgba(231, 76, 60, 0.12);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.statusPending {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--foreground);
+  opacity: 0.6;
+  border: 1px solid var(--border-faint);
+}
+
+/* ─── Admin Action Buttons ─── */
+.adminControls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.adminApproveBtn {
+  background: rgba(46, 204, 113, 0.2);
+  border: 1px solid #2ecc71;
+  color: #2ecc71;
+  padding: 6px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.adminApproveBtn:hover {
+  background: #2ecc71;
+  color: #000;
+}
+
+.adminActionBtn {
+  background: rgba(231, 76, 60, 0.2);
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  padding: 6px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.adminActionBtn:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+/* ─── Form Cards ─── */
+.formCard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.inputField {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-faint);
+  color: var(--white);
+  padding: 12px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.25s ease;
+}
+
+.inputField:focus {
+  border-color: var(--gold);
+}
+
+.submitBtn {
+  background: var(--gold);
+  color: var(--obsidian);
+  border: none;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: opacity 0.2s ease;
+  align-self: flex-start;
+}
+
+.submitBtn:hover {
+  opacity: 0.88;
+}
+
+/* ─── Banner Notice ─── */
+.noticeBanner {
+  padding: 14px 20px;
+  background: rgba(46, 204, 113, 0.15);
+  border: 1px solid #2ecc71;
+  border-radius: 4px;
+  color: #2ecc71;
+  font-size: 0.9rem;
+}
+
+.inviteResultBanner {
+  padding: 16px 20px;
+  background: rgba(168, 140, 58, 0.12);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.copyBadge {
+  font-family: monospace;
+  background: var(--obsidian);
+  color: var(--gold);
+  padding: 6px 12px;
+  border-radius: 3px;
+  border: 1px solid var(--border-faint);
+  font-size: 0.85rem;
+}
+
+.copyBtn {
+  background: var(--gold);
+  color: var(--obsidian);
+  border: none;
+  padding: 8px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .heroStrip {
+    padding: 140px var(--spacing-md) 35px;
+  }
+
+  .container {
+    padding: 35px var(--spacing-md) 80px;
+  }
+
+  .commandTabs {
+    flex-direction: column;
+  }
+
+  .commandBtn {
+    min-width: unset;
+  }
+}
