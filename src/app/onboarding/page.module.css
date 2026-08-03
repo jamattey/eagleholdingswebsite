@@ -730,3 +730,105 @@
     align-items: flex-start;
   }
 }
+
+/* ─── Main Navigation Tabs (Dashboard / Submission / Data Room) ─── */
+.mainNavTabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-faint);
+  border-radius: 8px;
+  padding: 6px;
+  flex-wrap: wrap;
+}
+
+.mainNavBtn {
+  flex: 1;
+  min-width: 160px;
+  background: none;
+  border: none;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0.5;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.25s ease;
+  text-align: center;
+}
+
+.mainNavBtn:hover {
+  opacity: 0.85;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.activeMainNav {
+  background: var(--gold);
+  color: var(--obsidian);
+  opacity: 1;
+  box-shadow: 0 2px 12px rgba(168, 140, 58, 0.3);
+}
+
+/* ─── View Section Wrapper ─── */
+.viewSection {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ─── Blur Overlay Login Button ─── */
+.blurLoginBtn {
+  background: var(--gold);
+  color: var(--obsidian);
+  padding: 13px 30px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  margin-top: 8px;
+}
+
+.blurLoginBtn:hover {
+  opacity: 0.88;
+}
+
+/* ─── Unauthenticated Banner Login Button ─── */
+.loginBtn {
+  background: none;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 10px 22px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.loginBtn:hover {
+  background: var(--gold);
+  color: var(--obsidian);
+}
+
+@media (max-width: 768px) {
+  .mainNavTabs {
+    flex-direction: column;
+  }
+
+  .mainNavBtn {
+    min-width: unset;
+  }
+}
