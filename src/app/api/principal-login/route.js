@@ -45,7 +45,7 @@ export async function POST(request) {
       : `Sponsor Entity (${cleanId})`;
 
     // Create cryptographically signed JWT token
-    const token = signJwt({
+    const token = await signJwt({
       sub: cleanId,
       name: sponsorName,
       role: 'PRINCIPAL',

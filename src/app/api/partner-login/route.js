@@ -46,7 +46,7 @@ export async function POST(request) {
       : `Partner Entity (${cleanPartnerId})`;
 
     // Create cryptographically signed JWT payload
-    const token = signJwt({
+    const token = await signJwt({
       sub: cleanPartnerId,
       name: partnerName,
       role: 'PARTNER',

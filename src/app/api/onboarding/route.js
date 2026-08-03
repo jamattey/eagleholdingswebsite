@@ -21,7 +21,7 @@ export async function POST(request) {
   const cookieHeader = request.headers.get('cookie') || '';
   const match = cookieHeader.match(/eagle_session=([^;]+)/);
   const sessionToken = match ? match[1] : null;
-  const session = sessionToken ? verifyJwt(sessionToken) : null;
+  const session = sessionToken ? await verifyJwt(sessionToken) : null;
 
   try {
     const rawBody = await request.json();
@@ -66,8 +66,6 @@ export async function POST(request) {
     const isAdminAction = action === 'admin_update_status' || action === 'admin_update_terms' || action === 'invite_principal';
     
     if (isAdminAction) {
-      // In production Zero Trust, require session.role === 'ADMIN'
-      // If user toggles to Admin in prototype mode, allow if valid session or explicitly requested
       if (session && session.role !== 'ADMIN' && session.role !== 'PARTNER') {
         securityLog('UNAUTHORIZED_ADMIN_ACTION', { action, ip: clientIp, userRole: session?.role });
       }

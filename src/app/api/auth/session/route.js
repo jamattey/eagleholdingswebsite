@@ -12,7 +12,7 @@ export async function GET(request) {
     return Response.json({ authenticated: false, session: null }, { status: 200 });
   }
 
-  const payload = verifyJwt(token);
+  const payload = await verifyJwt(token);
   if (!payload) {
     return Response.json({ authenticated: false, session: null }, { status: 200 });
   }
