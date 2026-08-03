@@ -195,6 +195,45 @@
   color: var(--accent-gold);
 }
 
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.errorMsg {
+  font-size: 0.9rem;
+  color: #c0392b;
+  padding: 14px 18px;
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  border-radius: 4px;
+  background: rgba(192, 57, 43, 0.05);
+}
+
+.demoBanner {
+  padding: 14px 18px;
+  background: rgba(168, 140, 58, 0.08);
+  border: 1px dashed var(--gold);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--foreground);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.demoBadge {
+  font-family: monospace;
+  background: var(--obsidian);
+  color: var(--gold);
+  padding: 4px 8px;
+  border-radius: 3px;
+  border: 1px solid var(--border-faint);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
   .heroStrip {

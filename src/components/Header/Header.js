@@ -47,6 +47,9 @@ export default function Header() {
             <Link href="/partner-login" className={styles.buttonPrimary}>
               Partner Login
             </Link>
+            <Link href="/onboarding" className={styles.buttonPrimary}>
+              Onboarding
+            </Link>
             <Link href="/contact" className={styles.buttonPrimary}>
               Contact
             </Link>
@@ -67,6 +70,9 @@ export default function Header() {
       <div className={`${styles.mobileNav} ${isMobileMenuOpen ? styles.mobileNavOpen : ''}`}>
         <Link href="/partner-login" className={styles.mobileNavLink} onClick={closeMobileMenu}>
           Partner Login
+        </Link>
+        <Link href="/onboarding" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+          Onboarding
         </Link>
         <Link href="/contact" className={styles.mobileNavLink} onClick={closeMobileMenu}>
           Contact

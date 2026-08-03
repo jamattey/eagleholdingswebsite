@@ -191,6 +191,92 @@
   color: var(--accent-gold);
 }
 
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Error message ─── */
+.errorMsg {
+  font-size: 0.9rem;
+  color: #c0392b;
+  padding: 14px 18px;
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  border-radius: 4px;
+  background: rgba(192, 57, 43, 0.05);
+}
+
+/* ─── Success state ─── */
+.successState {
+  text-align: center;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.successIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: var(--gold);
+  box-shadow: 0 0 30px rgba(168, 140, 58, 0.2);
+}
+
+.successTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+.successText {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--foreground);
+  opacity: 0.7;
+  max-width: 520px;
+}
+
+.refBadge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 16px;
+  background: var(--obsidian);
+  color: var(--gold);
+  font-family: monospace;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--border-faint);
+  border-radius: 4px;
+}
+
+.resetBtn {
+  margin-top: var(--spacing-md);
+  background: none;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 12px 28px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.resetBtn:hover {
+  background: var(--gold);
+  color: var(--obsidian);
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
   .heroStrip {

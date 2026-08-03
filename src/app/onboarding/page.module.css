@@ -1,0 +1,572 @@
+/* ==========================================
+   Onboarding Portal — page.module.css
+   ========================================== */
+
+.main {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* ─── Hero / Header ─── */
+.heroStrip {
+  position: relative;
+  background-color: var(--obsidian);
+  padding: 160px var(--spacing-xl) 60px;
+  border-bottom: 1px solid var(--border-faint);
+  overflow: hidden;
+}
+
+.bgGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--bg-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-faint) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.badgeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--gold);
+  box-shadow: 0 0 10px rgba(168, 140, 58, 0.6);
+}
+
+/* ─── Role Switcher ─── */
+.roleSwitcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-faint);
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.roleBtn {
+  background: none;
+  border: none;
+  color: var(--foreground);
+  opacity: 0.6;
+  padding: 8px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.roleBtn:hover {
+  opacity: 1;
+}
+
+.activeRole {
+  background: var(--gold);
+  color: var(--obsidian);
+  opacity: 1;
+}
+
+.pageTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  color: var(--white);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.pageSubtitle {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--platinum);
+  opacity: 0.7;
+  max-width: 760px;
+}
+
+/* ─── Progress Bar ─── */
+.progressSection {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-faint);
+  padding: 24px;
+  border-radius: 6px;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.progressLabel {
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.progressVal {
+  color: var(--white);
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+}
+
+.track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--accent-gold, #cbb057));
+  transition: width 0.6s ease;
+}
+
+/* ─── Container ─── */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px var(--spacing-xl) 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+/* ─── Tabs ─── */
+.tabGroup {
+  display: flex;
+  gap: var(--spacing-md);
+  border-bottom: 1px solid var(--border-faint);
+  padding-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.tabBtn {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0.5;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tabBtn:hover {
+  opacity: 0.85;
+}
+
+.activeTab {
+  opacity: 1;
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* ─── Checklist Grid ─── */
+.checklistGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.checklistItem {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-faint);
+  border-radius: 6px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  transition: border-color 0.3s ease;
+}
+
+.checklistItem:hover {
+  border-color: var(--gold);
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.itemCategory {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.itemTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.itemDescription {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  opacity: 0.65;
+  margin-top: 4px;
+}
+
+/* ─── Status Badges ─── */
+.statusBadge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.statusVerified {
+  background: rgba(46, 204, 113, 0.12);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.statusAudit {
+  background: rgba(241, 196, 15, 0.12);
+  color: #f1c40f;
+  border: 1px solid rgba(241, 196, 15, 0.3);
+}
+
+.statusAction {
+  background: rgba(231, 76, 60, 0.12);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.statusPending {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--foreground);
+  opacity: 0.6;
+  border: 1px solid var(--border-faint);
+}
+
+/* ─── Item Footer / Upload Button ─── */
+.itemFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-very-faint);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.docRef {
+  font-size: 0.78rem;
+  opacity: 0.5;
+  font-family: monospace;
+}
+
+.uploadLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 8px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.uploadLabel:hover {
+  background: var(--gold);
+  color: var(--obsidian);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* ─── Admin Action Controls ─── */
+.adminControls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.adminApproveBtn {
+  background: rgba(46, 204, 113, 0.2);
+  border: 1px solid #2ecc71;
+  color: #2ecc71;
+  padding: 6px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.adminApproveBtn:hover {
+  background: #2ecc71;
+  color: #000;
+}
+
+.adminActionBtn {
+  background: rgba(231, 76, 60, 0.2);
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  padding: 6px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.adminActionBtn:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+/* ─── Capital Raise Offer & Feedback ─── */
+.offerCard {
+  background: var(--obsidian);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  box-shadow: 0 0 40px rgba(168, 140, 58, 0.08);
+}
+
+.offerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.offerTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--white);
+  font-weight: 700;
+}
+
+.offerSubtitle {
+  font-size: 0.95rem;
+  color: var(--platinum);
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.termsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-faint);
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.termItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.termLabel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.termVal {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--white);
+  font-weight: 700;
+}
+
+/* ─── Feedback Form ─── */
+.feedbackForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-faint);
+  padding: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--foreground);
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  resize: vertical;
+}
+
+.textarea:focus {
+  border-color: var(--gold);
+}
+
+.submitBtn {
+  align-self: flex-end;
+  background: var(--gold);
+  color: var(--obsidian);
+  border: none;
+  padding: 12px 28px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: opacity 0.3s ease;
+}
+
+.submitBtn:hover {
+  opacity: 0.88;
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.successFeedbackAlert {
+  padding: 14px 20px;
+  background: rgba(46, 204, 113, 0.12);
+  border: 1px solid #2ecc71;
+  color: #2ecc71;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+/* ─── Admin Terms Editor Form ─── */
+.adminTermsForm {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.adminInputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.adminInput {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-faint);
+  color: var(--white);
+  padding: 10px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  border-radius: 4px;
+}
+
+.adminSaveBtn {
+  background: var(--gold);
+  color: var(--obsidian);
+  border: none;
+  padding: 11px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .heroStrip {
+    padding: 140px var(--spacing-md) 40px;
+  }
+
+  .container {
+    padding: 40px var(--spacing-md) 80px;
+  }
+
+  .checklistGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .offerCard {
+    padding: 24px;
+  }
+
+  .topRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

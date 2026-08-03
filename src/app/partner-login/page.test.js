@@ -1,7 +1,23 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import PartnerLogin from './page';
 
+const mockPush = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+}));
+
 describe('Partner Login Page', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn();
+    mockPush.mockReset();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('renders the main heading and description', () => {
     render(<PartnerLogin />);
     expect(screen.getByRole('heading', { level: 1, name: /Partner Portal/i })).toBeInTheDocument();
@@ -22,27 +38,53 @@ describe('Partner Login Page', () => {
     expect(securityKeyInput).toBeRequired();
   });
 
-  it('renders the submit button and request credentials link', () => {
+  it('populates demo credentials when demo button is clicked', () => {
     render(<PartnerLogin />);
-    
-    const submitBtn = screen.getByRole('button', { name: /Authenticate/i });
-    expect(submitBtn).toBeInTheDocument();
 
-    const requestLink = screen.getByRole('link', { name: /Request Credentials/i });
-    expect(requestLink).toBeInTheDocument();
-    expect(requestLink).toHaveAttribute('href', '/request-credentials');
+    const demoBtn = screen.getByRole('button', { name: /Use Demo Credentials/i });
+    fireEvent.click(demoBtn);
+
+    expect(screen.getByLabelText(/Partner ID/i).value).toBe('EAGLE-8821');
+    expect(screen.getByLabelText(/Security Key/i).value).toBe('demo-key-2026');
   });
 
-  it('allows user interaction on input fields', () => {
+  it('submits login form and redirects to /partner-portal on success', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        success: true,
+        token: 'TK-123456',
+        partner: { partnerId: 'EAGLE-8821', name: 'Strategic Global Capital' },
+      }),
+    });
+
     render(<PartnerLogin />);
 
-    const partnerIdInput = screen.getByLabelText(/Partner ID/i);
-    const securityKeyInput = screen.getByLabelText(/Security Key/i);
+    fireEvent.change(screen.getByLabelText(/Partner ID/i), { target: { value: 'EAGLE-8821' } });
+    fireEvent.change(screen.getByLabelText(/Security Key/i), { target: { value: 'demo-key-2026' } });
 
-    fireEvent.change(partnerIdInput, { target: { value: 'PARTNER123' } });
-    fireEvent.change(securityKeyInput, { target: { value: 'SecretPass123' } });
+    fireEvent.click(screen.getByRole('button', { name: /Authenticate/i }));
 
-    expect(partnerIdInput.value).toBe('PARTNER123');
-    expect(securityKeyInput.value).toBe('SecretPass123');
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/partner-portal');
+    });
+  });
+
+  it('displays an error message when authentication fails', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: 'Invalid Security Key.' }),
+    });
+
+    render(<PartnerLogin />);
+
+    fireEvent.change(screen.getByLabelText(/Partner ID/i), { target: { value: 'BAD-ID' } });
+    fireEvent.change(screen.getByLabelText(/Security Key/i), { target: { value: '123' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /Authenticate/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Invalid Security Key.')).toBeInTheDocument();
+    });
   });
 });

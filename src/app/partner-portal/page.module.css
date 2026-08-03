@@ -1,0 +1,401 @@
+/* ==========================================
+   Partner Portal Dashboard — page.module.css
+   ========================================== */
+
+.main {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* ─── Hero / Header Banner ─── */
+.portalHeader {
+  position: relative;
+  background-color: var(--obsidian);
+  padding: 160px var(--spacing-xl) 60px;
+  border-bottom: 1px solid var(--border-faint);
+  overflow: hidden;
+}
+
+.bgGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--bg-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-faint) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.headerContainer {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--spacing-xl);
+}
+
+.titleArea {
+  max-width: 700px;
+}
+
+.securityTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.securityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #2ecc71;
+  box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);
+}
+
+.portalTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  color: var(--white);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.partnerSubtext {
+  font-size: 1.05rem;
+  color: var(--platinum);
+  opacity: 0.7;
+}
+
+.userProfileCard {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-faint);
+  padding: 16px 24px;
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.partnerName {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--white);
+}
+
+.clearanceBadge {
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+}
+
+.signOutBtn {
+  background: none;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 10px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.signOutBtn:hover {
+  background: var(--gold);
+  color: var(--obsidian);
+}
+
+/* ─── Dashboard Content Grid ─── */
+.dashboardSection {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px var(--spacing-xl) 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+/* ─── Metrics Grid ─── */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.metricCard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-faint);
+  padding: 28px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.metricCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+}
+
+.metricHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metricLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.metricIcon {
+  font-size: 1.2rem;
+  opacity: 0.6;
+}
+
+.metricValue {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.metricSubtext {
+  font-size: 0.82rem;
+  opacity: 0.6;
+}
+
+/* ─── Section Blocks ─── */
+.sectionBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.blockTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--foreground);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.blockTitle::before {
+  content: '';
+  width: 14px;
+  height: 2px;
+  background: var(--gold);
+}
+
+/* ─── Confidential Briefings / Documents ─── */
+.documentsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.docCard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-faint);
+  border-radius: 6px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  transition: border-color 0.3s ease;
+}
+
+.docCard:hover {
+  border-color: var(--gold);
+}
+
+.docBadge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  background: rgba(168, 140, 58, 0.12);
+  color: var(--gold);
+  border-radius: 3px;
+  align-self: flex-start;
+}
+
+.docTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 8px;
+  line-height: 1.3;
+}
+
+.docDescription {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  opacity: 0.65;
+  margin-top: 6px;
+}
+
+.docFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-very-faint);
+}
+
+.docMeta {
+  font-size: 0.78rem;
+  opacity: 0.5;
+}
+
+.downloadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.downloadBtn:hover {
+  opacity: 0.75;
+}
+
+/* ─── Security Audit Log ─── */
+.auditCard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-faint);
+  border-radius: 6px;
+  padding: 24px;
+}
+
+.auditList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auditItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-very-faint);
+  font-size: 0.85rem;
+}
+
+.auditItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.auditAction {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.auditMeta {
+  font-size: 0.8rem;
+  opacity: 0.5;
+  font-family: monospace;
+}
+
+/* ─── Unauthorized Access State ─── */
+.unauthorizedState {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  text-align: center;
+  padding: 120px var(--spacing-xl) 80px;
+}
+
+.lockIcon {
+  font-size: 3rem;
+  color: var(--gold);
+}
+
+.loginPromptBtn {
+  background: var(--gold);
+  color: var(--obsidian);
+  padding: 14px 32px;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: opacity 0.3s ease;
+}
+
+.loginPromptBtn:hover {
+  opacity: 0.85;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .portalHeader {
+    padding: 140px var(--spacing-md) 40px;
+  }
+
+  .dashboardSection {
+    padding: 40px var(--spacing-md) 80px;
+  }
+
+  .headerContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .userProfileCard {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .auditItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

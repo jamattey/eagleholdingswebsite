@@ -1,14 +1,22 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import RequestCredentials from './page';
 
 describe('Request Credentials Page', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('renders the main heading and description', () => {
     render(<RequestCredentials />);
     expect(screen.getByRole('heading', { level: 1, name: /Credential Request/i })).toBeInTheDocument();
     expect(screen.getByText(/New stakeholders may request access to the Partner Portal/i)).toBeInTheDocument();
   });
 
-  it('renders form inputs for First Name, Last Name, Corporate Email, and Purpose', () => {
+  it('renders form inputs for First Name, Last Name, Corporate Email, Organization, and Purpose', () => {
     render(<RequestCredentials />);
 
     const firstNameInput = screen.getByLabelText(/First Name/i);
@@ -24,6 +32,9 @@ describe('Request Credentials Page', () => {
     expect(emailInput).toHaveAttribute('type', 'email');
     expect(emailInput).toBeRequired();
 
+    const organizationInput = screen.getByLabelText(/Organization \/ Firm/i);
+    expect(organizationInput).toBeInTheDocument();
+
     const purposeInput = screen.getByLabelText(/Purpose of Request/i);
     expect(purposeInput).toBeInTheDocument();
     expect(purposeInput).toBeRequired();
@@ -38,7 +49,7 @@ describe('Request Credentials Page', () => {
     expect(submitBtn).toBeInTheDocument();
   });
 
-  it('allows user input in all form fields', () => {
+  it('allows user input in form fields', () => {
     render(<RequestCredentials />);
 
     const firstNameInput = screen.getByLabelText(/First Name/i);
@@ -55,5 +66,53 @@ describe('Request Credentials Page', () => {
     expect(lastNameInput.value).toBe('Doe');
     expect(emailInput.value).toBe('jane.doe@company.com');
     expect(purposeInput.value).toBe('Strategic investment briefing request.');
+  });
+
+  it('submits the form successfully and displays reference ID and confirmation', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ success: true, referenceId: 'REQ-123456-ABC' }),
+    });
+
+    render(<RequestCredentials />);
+
+    fireEvent.change(screen.getByLabelText(/First Name/i), { target: { value: 'Jane' } });
+    fireEvent.change(screen.getByLabelText(/Last Name/i), { target: { value: 'Doe' } });
+    fireEvent.change(screen.getByLabelText(/Corporate Email/i), { target: { value: 'jane.doe@company.com' } });
+    fireEvent.change(screen.getByLabelText(/Purpose of Request/i), { target: { value: 'Portal access request.' } });
+
+    const submitBtn = screen.getByRole('button', { name: /Submit Request/i });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Request Submitted/i)).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('REQ-123456-ABC')).toBeInTheDocument();
+    expect(screen.getByText(/Thank you,/i)).toBeInTheDocument();
+
+    // Can reset form to submit another request
+    fireEvent.click(screen.getByRole('button', { name: /Submit Another Request/i }));
+    expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
+  });
+
+  it('displays an error message when form submission fails', async () => {
+    global.fetch.mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: 'Corporate email is already registered.' }),
+    });
+
+    render(<RequestCredentials />);
+
+    fireEvent.change(screen.getByLabelText(/First Name/i), { target: { value: 'Jane' } });
+    fireEvent.change(screen.getByLabelText(/Last Name/i), { target: { value: 'Doe' } });
+    fireEvent.change(screen.getByLabelText(/Corporate Email/i), { target: { value: 'jane.doe@company.com' } });
+    fireEvent.change(screen.getByLabelText(/Purpose of Request/i), { target: { value: 'Portal access request.' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /Submit Request/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Corporate email is already registered.')).toBeInTheDocument();
+    });
   });
 });
