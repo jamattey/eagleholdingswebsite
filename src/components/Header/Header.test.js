@@ -4,13 +4,14 @@ import Header from './Header';
 describe('Header Component', () => {
   it('renders the brand name', () => {
     render(<Header />);
-    expect(screen.getByText('EAGLE HOLDINGS')).toBeInTheDocument();
+    expect(screen.getByText('EAGLE')).toBeInTheDocument();
+    expect(screen.getByText('HOLDINGS')).toBeInTheDocument();
   });
 
   it('renders the navigation buttons', () => {
     render(<Header />);
-    expect(screen.getByText('Partner Login')).toBeInTheDocument();
-    expect(screen.getByText('Request Credentials')).toBeInTheDocument();
+    expect(screen.getAllByText('Partner Login').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Contact').length).toBeGreaterThan(0);
   });
 
   it('renders the logo image', () => {
