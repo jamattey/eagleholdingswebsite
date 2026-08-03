@@ -6,6 +6,32 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import styles from "./page.module.css";
 
+// ─── Helper: Generate SVG Data URL for sample document previews ─────────────
+function createSampleDocSvg(title, docRef, subtitle) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+    <rect width="800" height="1000" fill="#0b0e14"/>
+    <rect x="40" y="40" width="720" height="920" fill="#121824" stroke="#c5a059" stroke-width="2" rx="8"/>
+    <circle cx="400" cy="180" r="45" fill="#c5a059" fill-opacity="0.15" stroke="#c5a059" stroke-width="1.5"/>
+    <text x="400" y="192" font-family="serif" font-size="36" fill="#c5a059" text-anchor="middle">🦅</text>
+    <text x="400" y="260" font-family="sans-serif" font-size="22" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="4">EAGLE HOLDINGS</text>
+    <text x="400" y="288" font-family="sans-serif" font-size="11" fill="#c5a059" text-anchor="middle" letter-spacing="2">GLOBAL STRATEGIC CAPITAL &amp; ADVISORY</text>
+    <line x1="120" y1="320" x2="680" y2="320" stroke="#c5a059" stroke-width="1" opacity="0.3"/>
+    <text x="400" y="390" font-family="serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle">${title}</text>
+    <text x="400" y="425" font-family="monospace" font-size="14" fill="#c5a059" text-anchor="middle">OFFICIAL COMPLIANCE RECORD · ${docRef}</text>
+    <text x="400" y="470" font-family="sans-serif" font-size="13" fill="#a0aab8" text-anchor="middle">${subtitle}</text>
+    <rect x="120" y="520" width="560" height="260" fill="#1a2232" rx="6" stroke="#2a3448"/>
+    <text x="150" y="565" font-family="sans-serif" font-size="13" font-weight="bold" fill="#4caf50">✓ AUDITED &amp; LOGGED TO VDR SECURITY VAULT</text>
+    <text x="150" y="600" font-family="monospace" font-size="12" fill="#808c9e">Document Ref: ${docRef}</text>
+    <text x="150" y="625" font-family="monospace" font-size="12" fill="#808c9e">Security Level: ZERO TRUST / OWASP HARDENED</text>
+    <text x="150" y="650" font-family="monospace" font-size="12" fill="#808c9e">Encryption: AES-256 / SHA-256 HMAC</text>
+    <text x="150" y="675" font-family="monospace" font-size="12" fill="#808c9e">Verification Hash: 0x8f2a91b4c3e78210984aef5d</text>
+    <text x="150" y="700" font-family="monospace" font-size="12" fill="#808c9e">Audit Timestamp: 2026-07-30T14:22:00Z</text>
+    <line x1="120" y1="840" x2="680" y2="840" stroke="#2a3448" stroke-width="1"/>
+    <text x="400" y="880" font-family="sans-serif" font-size="11" fill="#606c7e" text-anchor="middle">RESTRICTED ACCESS — FOR AUTHORIZED PROJECT PRINCIPALS &amp; ADVISORS ONLY</text>
+  </svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
 const initialChecklist = [
   { id: 'item-01', category: 'entity', categoryLabel: 'Entity & Principal KYC', title: 'Personal KYC & Passport Verification', description: 'Notarized government ID and proof of residence for all project principals and directors.', status: 'Verified', ref: 'DOC-KYC-991' },
   { id: 'item-02', category: 'entity', categoryLabel: 'Entity & Principal KYC', title: 'Ultimate Beneficial Owner (UBO) Disclosures', description: 'Corporate ownership breakdown certifying all beneficiaries meeting the applicable threshold.', status: 'Verified', ref: 'DOC-UBO-402' },
@@ -29,12 +55,134 @@ const initialChecklist = [
   { id: 'item-20', category: 'financial', categoryLabel: 'Financial & Legal Compliance', title: 'Hotel Management or Franchise Agreement', description: 'Executed management contract or franchise agreement with the designated hotel operator.', status: 'Pending Upload', ref: 'DOC-HMA-REQ' },
 ];
 
+const initialDataRoomDocs = [
+  {
+    id: 'vdr-item-01',
+    itemId: 'item-01',
+    title: 'Personal KYC & Passport Verification',
+    categoryLabel: 'Entity & Principal KYC',
+    category: 'entity',
+    fileName: 'Passport_and_ID_Notarized_Principals.pdf',
+    fileType: 'application/pdf',
+    objectUrl: createSampleDocSvg('Personal KYC & Passport Verification', 'DOC-KYC-991', 'Notarized Passport & Proof of Residence'),
+    vdrReference: 'DOC-KYC-991',
+    dealReference: 'DEAL-SPONSOR-991',
+    submittedAt: '2026-07-28T10:00:00Z',
+    reviewStatus: 'Verified',
+  },
+  {
+    id: 'vdr-item-02',
+    itemId: 'item-02',
+    title: 'Ultimate Beneficial Owner (UBO) Disclosures',
+    categoryLabel: 'Entity & Principal KYC',
+    category: 'entity',
+    fileName: 'UBO_Ownership_Breakdown_Certificate.pdf',
+    fileType: 'application/pdf',
+    objectUrl: createSampleDocSvg('Ultimate Beneficial Owner Disclosures', 'DOC-UBO-402', 'Corporate Ownership Breakdown Certificate'),
+    vdrReference: 'DOC-UBO-402',
+    dealReference: 'DEAL-SPONSOR-402',
+    submittedAt: '2026-07-29T14:30:00Z',
+    reviewStatus: 'Verified',
+  },
+  {
+    id: 'vdr-item-04',
+    itemId: 'item-04',
+    title: 'Mandatory Corporate Verification Documents',
+    categoryLabel: 'Entity & Principal KYC',
+    category: 'entity',
+    fileName: 'Certificate_Inc_MAA_AuditedFinancials.pdf',
+    fileType: 'application/pdf',
+    objectUrl: createSampleDocSvg('Corporate Verification Documents', 'DOC-CORP-112', 'Certificate of Incorporation & Audited Financials'),
+    vdrReference: 'DOC-CORP-112',
+    dealReference: 'DEAL-SPONSOR-112',
+    submittedAt: '2026-08-01T09:15:00Z',
+    reviewStatus: 'Under Audit',
+  },
+  {
+    id: 'vdr-item-16',
+    itemId: 'item-16',
+    title: 'Environmental & Social Impact Assessment (ESIA)',
+    categoryLabel: 'Project Technical Compliance',
+    category: 'project',
+    fileName: 'ESIA_Report_and_Environmental_Permit.pdf',
+    fileType: 'application/pdf',
+    objectUrl: createSampleDocSvg('Environmental & Social Impact Assessment', 'DOC-TECH-011', 'Full ESIA Report & Environmental Permit'),
+    vdrReference: 'DOC-TECH-011',
+    dealReference: 'DEAL-SPONSOR-011',
+    submittedAt: '2026-08-01T16:45:00Z',
+    reviewStatus: 'Action Required',
+  },
+  {
+    id: 'vdr-item-17',
+    itemId: 'item-17',
+    title: 'Corporate Banking Credentials & CIS',
+    categoryLabel: 'Financial & Legal Compliance',
+    category: 'financial',
+    fileName: 'CIS_Bank_Reference_Letter_2026.pdf',
+    fileType: 'application/pdf',
+    objectUrl: createSampleDocSvg('Corporate Banking Credentials & CIS', 'DOC-CIS-108', 'Client Information Sheet & Bank Reference'),
+    vdrReference: 'DOC-CIS-108',
+    dealReference: 'DEAL-SPONSOR-108',
+    submittedAt: '2026-08-02T11:20:00Z',
+    reviewStatus: 'Under Audit',
+  },
+  {
+    id: 'vdr-item-18',
+    itemId: 'item-18',
+    title: 'Source of Funds & Equity Proof',
+    categoryLabel: 'Financial & Legal Compliance',
+    category: 'financial',
+    fileName: 'Sponsor_Equity_Financial_Model.pdf',
+    fileType: 'application/pdf',
+    objectUrl: createSampleDocSvg('Source of Funds & Equity Proof', 'DOC-SOF-PENDING', 'Sponsor Equity Contribution & Financial Model'),
+    vdrReference: 'DOC-SOF-PENDING',
+    dealReference: 'DEAL-SPONSOR-180',
+    submittedAt: '2026-08-02T15:10:00Z',
+    reviewStatus: 'Action Required',
+  },
+];
+
+const initialVdrFeedback = {
+  'vdr-item-01': [
+    { text: 'Document submitted to Eagle Holdings VDR.', reviewedAt: '2026-07-28T10:00:00Z', reviewedBy: 'Project Principal' },
+    { text: 'Verified notarized passport and proof of residence. ID clearance passed.', reviewedAt: '2026-07-29T09:00:00Z', reviewedBy: 'Eagle Holdings Compliance Officer', status: 'Verified' }
+  ],
+  'vdr-item-02': [
+    { text: 'Document submitted to Eagle Holdings VDR.', reviewedAt: '2026-07-29T14:30:00Z', reviewedBy: 'Project Principal' },
+    { text: 'Ownership structure validated against corporate registry.', reviewedAt: '2026-07-30T11:15:00Z', reviewedBy: 'Eagle Holdings Legal Advisor', status: 'Verified' }
+  ],
+  'vdr-item-04': [
+    { text: 'Document submitted to Eagle Holdings VDR.', reviewedAt: '2026-08-01T09:15:00Z', reviewedBy: 'Project Principal' },
+    { text: 'Audited financials under review by Investment Committee.', reviewedAt: '2026-08-01T14:00:00Z', reviewedBy: 'Eagle Holdings Senior Analyst', status: 'Under Audit' }
+  ],
+  'vdr-item-16': [
+    { text: 'Document submitted to Eagle Holdings VDR.', reviewedAt: '2026-08-01T16:45:00Z', reviewedBy: 'Project Principal' },
+    { text: 'Flagged: Page 14 requires signed environmental mitigation commitment from principal.', reviewedAt: '2026-08-02T10:30:00Z', reviewedBy: 'Eagle Holdings Technical Advisor', status: 'Action Required' }
+  ],
+  'vdr-item-17': [
+    { text: 'Document submitted to Eagle Holdings VDR.', reviewedAt: '2026-08-02T11:20:00Z', reviewedBy: 'Project Principal' },
+    { text: 'Bank reference letter undergoing bank-to-bank verification.', reviewedAt: '2026-08-02T14:00:00Z', reviewedBy: 'Eagle Holdings Compliance Officer', status: 'Under Audit' }
+  ],
+  'vdr-item-18': [
+    { text: 'Document submitted to Eagle Holdings VDR.', reviewedAt: '2026-08-02T15:10:00Z', reviewedBy: 'Project Principal' },
+    { text: 'Action Required: Please attach bank statement showing equity deposit matching the 35% sponsor requirement.', reviewedAt: '2026-08-02T17:00:00Z', reviewedBy: 'Eagle Holdings Investment Director', status: 'Action Required' }
+  ],
+};
+
+const initialDeals = [
+  { dealReference: 'DEAL-SPONSOR-991', vdrReference: 'DOC-KYC-991', documentTitle: 'Personal KYC & Passport Verification', fileName: 'Passport_and_ID_Notarized_Principals.pdf', submittedAt: '2026-07-28T10:00:00Z', status: 'Approved' },
+  { dealReference: 'DEAL-SPONSOR-402', vdrReference: 'DOC-UBO-402', documentTitle: 'Ultimate Beneficial Owner (UBO) Disclosures', fileName: 'UBO_Ownership_Breakdown_Certificate.pdf', submittedAt: '2026-07-29T14:30:00Z', status: 'Approved' },
+  { dealReference: 'DEAL-SPONSOR-112', vdrReference: 'DOC-CORP-112', documentTitle: 'Mandatory Corporate Verification Documents', fileName: 'Certificate_Inc_MAA_AuditedFinancials.pdf', submittedAt: '2026-08-01T09:15:00Z', status: 'In Review' },
+  { dealReference: 'DEAL-SPONSOR-011', vdrReference: 'DOC-TECH-011', documentTitle: 'Environmental & Social Impact Assessment (ESIA)', fileName: 'ESIA_Report_and_Environmental_Permit.pdf', submittedAt: '2026-08-01T16:45:00Z', status: 'Action Required' },
+  { dealReference: 'DEAL-SPONSOR-108', vdrReference: 'DOC-CIS-108', documentTitle: 'Corporate Banking Credentials & CIS', fileName: 'CIS_Bank_Reference_Letter_2026.pdf', submittedAt: '2026-08-02T11:20:00Z', status: 'In Review' },
+];
+
 const initialPipeline = [
   { inviteCode: 'INV-882104', sponsorName: 'Metro Civil Infrastructure Group', email: 'contact@metro-civil.com', projectName: 'High-Density Mobility Hub Phase I', facilityAmount: '$50,000,000 USD', invitedAt: '2026-08-01 14:30', status: 'Registered & Active' },
   { inviteCode: 'INV-401923', sponsorName: 'Pacific Rim Energy Developers', email: 'capital@pacific-energy.org', projectName: 'Regional Deepwater Civil Asset', facilityAmount: '$75,000,000 USD', invitedAt: '2026-08-02 09:15', status: 'Pending Registration' },
 ];
 
-// ─── Document Viewer ──────────────────────────────────────────────────────────
+// ─── Document Viewer Modal ──────────────────────────────────────────────────
 function DocumentViewer({ doc, onClose }) {
   const isImage = doc.fileType?.startsWith('image/');
   const isPdf = doc.fileType === 'application/pdf';
@@ -50,24 +198,30 @@ function DocumentViewer({ doc, onClose }) {
               {doc.fileName} · {doc.vdrReference} · Submitted {new Date(doc.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
             </span>
           </div>
-          <button className={styles.viewerCloseBtn} onClick={onClose} aria-label="Close viewer">✕</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button
+              className={styles.viewerTabBtn}
+              onClick={() => window.open(doc.objectUrl, '_blank')}
+            >
+              ↗ Open in New Tab
+            </button>
+            <button className={styles.viewerCloseBtn} onClick={onClose} aria-label="Close viewer">✕</button>
+          </div>
         </div>
         <div className={styles.viewerBody}>
-          {isPdf && (
+          {isPdf ? (
             <iframe
               src={doc.objectUrl}
               className={styles.viewerIframe}
               title={doc.title}
             />
-          )}
-          {isImage && (
+          ) : isImage ? (
             <img src={doc.objectUrl} alt={doc.title} className={styles.viewerImage} />
-          )}
-          {!isPdf && !isImage && (
+          ) : (
             <div className={styles.viewerFallback}>
               <div className={styles.viewerFallbackIcon}>📄</div>
               <p className={styles.viewerFallbackText}>
-                Preview is not available for this file type ({doc.fileType || 'unknown'}).
+                Preview format ({doc.fileType || 'binary'}). You can view or download it below.
               </p>
               <a
                 href={doc.objectUrl}
@@ -104,26 +258,25 @@ export default function OnboardingPage() {
   const [feedbackStatus, setFeedbackStatus] = useState('idle');
   const [feedbackReceipt, setFeedbackReceipt] = useState('');
 
-  // ─── Staged uploads (file selected but not yet submitted) ────────────────
-  // Map<itemId, { file, objectUrl, fileName, fileType }>
+  // Staged uploads (file selected but not yet submitted): Map<itemId, { file, objectUrl, fileName, fileType }>
   const [stagedFiles, setStagedFiles] = useState({});
 
-  // ─── Submitted Data Room documents ───────────────────────────────────────
-  const [dataRoomDocs, setDataRoomDocs] = useState([]);
+  // Submitted Data Room documents: Pre-populated with sample documents for submitted compliance items
+  const [dataRoomDocs, setDataRoomDocs] = useState(initialDataRoomDocs);
 
-  // ─── Active Deals (shown on admin dashboard) ─────────────────────────────
-  const [deals, setDeals] = useState([]);
+  // Active Deals (shown on admin dashboard): Pre-populated
+  const [deals, setDeals] = useState(initialDeals);
 
-  // ─── Data Room viewer modal ───────────────────────────────────────────────
+  // Data Room viewer modal
   const [viewingDoc, setViewingDoc] = useState(null);
 
-  // ─── Expanded VDR card (accordion) ───────────────────────────────────────
+  // Expanded VDR card (accordion)
   const [expandedVdrId, setExpandedVdrId] = useState(null);
 
-  // ─── Review feedback per VDR entry: Map<vdrId, { notes, reviewedAt, reviewedBy, status }[]> ─
-  const [vdrFeedback, setVdrFeedback] = useState({});
+  // Review feedback per VDR entry
+  const [vdrFeedback, setVdrFeedback] = useState(initialVdrFeedback);
 
-  // ─── Admin note input per VDR entry ──────────────────────────────────────
+  // Admin note input per VDR entry
   const [vdrNoteInputs, setVdrNoteInputs] = useState({});
 
   const [offerTerms, setOfferTerms] = useState({ targetCapital: '$50,000,000 USD', preferredTerms: '8.5% p.a.', ltvRatio: '65.0% LTV', advisoryTerm: '36 Months' });
@@ -149,14 +302,6 @@ export default function OnboardingPage() {
     checkZeroTrustSession();
   }, []);
 
-  // Clean up blob URLs on unmount to avoid memory leaks
-  useEffect(() => {
-    return () => {
-      Object.values(stagedFiles).forEach(f => URL.revokeObjectURL(f.objectUrl));
-      dataRoomDocs.forEach(d => URL.revokeObjectURL(d.objectUrl));
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   const totalItems = checklist.length;
   const completedItems = checklist.filter(i => i.status === 'Verified').length;
   const auditItems = checklist.filter(i => i.status === 'Under Audit').length;
@@ -171,7 +316,7 @@ export default function OnboardingPage() {
 
   const actionChecklist = checklist.filter(item => item.status !== 'Verified');
 
-  // ─── STAGE: file selected, not yet submitted ──────────────────────────────
+  // ─── Stage file selection ──────────────────────────────────────────────────
   const handleFileSelect = (e, itemId) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -185,7 +330,7 @@ export default function OnboardingPage() {
     ));
   };
 
-  // ─── SUBMIT: send to API, post to Data Room, create Deal ─────────────────
+  // ─── Submit staged document to Data Room & create Deal ────────────────────
   const handleDocumentSubmit = async (itemId) => {
     const staged = stagedFiles[itemId];
     if (!staged) return;
@@ -207,16 +352,15 @@ export default function OnboardingPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // Update checklist item status
         setChecklist(prev => prev.map(item =>
           item.id === itemId
             ? { ...item, status: 'Under Audit', ref: data.vdrReference }
             : item
         ));
 
-        // Post to Data Room
+        const newVdrId = `vdr-${itemId}`;
         const vdrEntry = {
-          id: `vdr-${itemId}-${Date.now()}`,
+          id: newVdrId,
           itemId,
           title: checklistItem?.title || itemId,
           categoryLabel: checklistItem?.categoryLabel || '',
@@ -227,9 +371,30 @@ export default function OnboardingPage() {
           vdrReference: data.vdrReference,
           dealReference: data.dealReference,
           submittedAt: data.submittedAt,
-          status: 'View Only',
+          reviewStatus: 'Under Audit',
         };
-        setDataRoomDocs(prev => [...prev, vdrEntry]);
+
+        // Add or replace in Data Room docs
+        setDataRoomDocs(prev => {
+          const exists = prev.some(d => d.itemId === itemId);
+          if (exists) {
+            return prev.map(d => (d.itemId === itemId ? vdrEntry : d));
+          }
+          return [...prev, vdrEntry];
+        });
+
+        // Append submission event to feedback
+        setVdrFeedback(prev => ({
+          ...prev,
+          [newVdrId]: [
+            ...(prev[newVdrId] || []),
+            {
+              text: `Document "${staged.fileName}" submitted to Eagle Holdings Data Room.`,
+              reviewedAt: data.submittedAt,
+              reviewedBy: 'Project Principal',
+            },
+          ],
+        }));
 
         // Create Deal entry for admin
         const deal = {
@@ -258,23 +423,42 @@ export default function OnboardingPage() {
     }
   };
 
-  const handleFeedbackSubmit = async (e) => {
-    e.preventDefault();
-    if (!feedbackText.trim()) return;
-    setFeedbackStatus('submitting');
-    try {
-      const res = await fetch('/api/onboarding', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'submit_feedback', feedbackText }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setFeedbackStatus('success');
-        setFeedbackReceipt(data.receiptId);
-        setFeedbackText('');
-      } else { setFeedbackStatus('error'); }
-    } catch { setFeedbackStatus('error'); }
+  // ─── Resubmit / Update document directly inside Virtual Data Room ────────
+  const handleVdrResubmit = (e, doc) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const objectUrl = URL.createObjectURL(file);
+    const updatedSubmittedAt = new Date().toISOString();
+
+    // Update VDR doc
+    setDataRoomDocs(prev => prev.map(d =>
+      d.id === doc.id
+        ? { ...d, fileName: file.name, fileType: file.type, objectUrl, submittedAt: updatedSubmittedAt, reviewStatus: 'Under Audit' }
+        : d
+    ));
+
+    // Update Checklist status
+    setChecklist(prev => prev.map(item =>
+      item.id === doc.itemId ? { ...item, status: 'Under Audit' } : item
+    ));
+
+    // Append log event to feedback timeline
+    setVdrFeedback(prev => ({
+      ...prev,
+      [doc.id]: [
+        ...(prev[doc.id] || []),
+        {
+          text: `Updated document version "${file.name}" uploaded by Project Principal.`,
+          reviewedAt: updatedSubmittedAt,
+          reviewedBy: 'Project Principal (Resubmission)',
+          status: 'Under Audit',
+        },
+      ],
+    }));
+
+    setUploadNotice(`Updated version for "${doc.title}" uploaded to Virtual Data Room.`);
+    setTimeout(() => setUploadNotice(''), 6000);
   };
 
   const handleAdminStatusChange = async (itemId, newStatus) => {
@@ -296,7 +480,6 @@ export default function OnboardingPage() {
     } catch (err) { console.error('Admin status change error:', err); }
   };
 
-  // ─── Admin: add a review note to a VDR entry ─────────────────────────────
   const handleAddVdrNote = (vdrId, itemId, newStatus) => {
     const noteText = vdrNoteInputs[vdrId] || '';
     const entry = {
@@ -310,12 +493,29 @@ export default function OnboardingPage() {
       [vdrId]: [...(prev[vdrId] || []), entry],
     }));
     setVdrNoteInputs(prev => ({ ...prev, [vdrId]: '' }));
-    // Also update checklist status
     handleAdminStatusChange(itemId, newStatus);
-    // Update the doc's status in dataRoomDocs
     setDataRoomDocs(prev => prev.map(d =>
       d.id === vdrId ? { ...d, reviewStatus: newStatus } : d
     ));
+  };
+
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+    if (!feedbackText.trim()) return;
+    setFeedbackStatus('submitting');
+    try {
+      const res = await fetch('/api/onboarding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'submit_feedback', feedbackText }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setFeedbackStatus('success');
+        setFeedbackReceipt(data.receiptId);
+        setFeedbackText('');
+      } else { setFeedbackStatus('error'); }
+    } catch { setFeedbackStatus('error'); }
   };
 
   const handleAdminTermsSave = async (e) => {
@@ -362,12 +562,30 @@ export default function OnboardingPage() {
     setTimeout(() => setCopiedLink(false), 4000);
   };
 
-  // ─── Checklist item card renderer ────────────────────────────────────────
+  // ─── Helper to find doc associated with a checklist item ─────────────────
+  const getDocForChecklistItem = (itemId) => {
+    const staged = stagedFiles[itemId];
+    if (staged) {
+      return {
+        id: `staged-${itemId}`,
+        title: checklist.find(i => i.id === itemId)?.title || '',
+        categoryLabel: checklist.find(i => i.id === itemId)?.categoryLabel || '',
+        fileName: staged.fileName,
+        fileType: staged.fileType,
+        objectUrl: staged.objectUrl,
+        vdrReference: 'STAGED — Pending Submission',
+        dealReference: '—',
+        submittedAt: new Date().toISOString(),
+      };
+    }
+    return dataRoomDocs.find(d => d.itemId === itemId) || null;
+  };
+
+  // ─── Checklist Item Card Renderer (for Dropzone & Checklist) ──────────────
   const renderChecklistItem = (item) => {
     const staged = stagedFiles[item.id];
     const isReadyToSubmit = item.status === 'Ready to Submit' && staged;
-    const isImage = staged?.fileType?.startsWith('image/');
-    const isPdf = staged?.fileType === 'application/pdf';
+    const existingDoc = getDocForChecklistItem(item.id);
 
     return (
       <div key={item.id} className={styles.checklistItem}>
@@ -390,35 +608,24 @@ export default function OnboardingPage() {
           </div>
           <p className={styles.itemDescription}>{item.description}</p>
 
-          {/* Staged file preview */}
-          {isReadyToSubmit && (
-            <div className={styles.stagedPreview}>
-              {isImage && (
-                <img src={staged.objectUrl} alt="Preview" className={styles.stagedImageThumb} />
-              )}
-              {(isPdf || (!isImage && !isPdf)) && (
-                <div className={styles.stagedPdfThumb}>
-                  <span className={styles.stagedPdfIcon}>{isPdf ? '📄' : '📎'}</span>
-                  <span className={styles.stagedFileName}>{staged.fileName}</span>
-                </div>
-              )}
-              {/* View button — opens document in modal */}
+          {/* Document Actions Bar (View in Modal / Open in New Tab) */}
+          {existingDoc && (
+            <div className={styles.docActionsBar}>
               <button
-                className={styles.stagedViewBtn}
-                onClick={() => setViewingDoc({
-                  id: `staged-${item.id}`,
-                  title: item.title,
-                  categoryLabel: item.categoryLabel,
-                  fileName: staged.fileName,
-                  fileType: staged.fileType,
-                  objectUrl: staged.objectUrl,
-                  vdrReference: 'STAGED — Not Yet Submitted',
-                  dealReference: '—',
-                  submittedAt: new Date().toISOString(),
-                })}
+                type="button"
+                className={styles.docViewModalBtn}
+                onClick={() => setViewingDoc(existingDoc)}
               >
-                👁 View Document
+                👁 View Modal
               </button>
+              <button
+                type="button"
+                className={styles.docViewTabBtn}
+                onClick={() => window.open(existingDoc.objectUrl, '_blank')}
+              >
+                ↗ Open in New Tab
+              </button>
+              <span className={styles.stagedFileNameLabel}>{existingDoc.fileName}</span>
             </div>
           )}
         </div>
@@ -447,7 +654,7 @@ export default function OnboardingPage() {
             </div>
           ) : (
             <label className={styles.uploadLabel}>
-              <span>{item.status === 'Verified' ? 'Re-upload' : 'Upload Document'}</span>
+              <span>{item.status === 'Verified' || existingDoc ? 'Re-upload Document' : 'Upload Document'}</span>
               <input type="file" className={styles.hiddenInput} onChange={(e) => handleFileSelect(e, item.id)} />
             </label>
           )}
@@ -456,7 +663,7 @@ export default function OnboardingPage() {
     );
   };
 
-  // ─── Data Room document card renderer (expandable accordion) ────────────
+  // ─── Data Room Document Card Renderer (Expandable Accordion) ─────────────
   const renderDataRoomCard = (doc) => {
     const isImage = doc.fileType?.startsWith('image/');
     const isPdf = doc.fileType === 'application/pdf';
@@ -467,7 +674,7 @@ export default function OnboardingPage() {
 
     return (
       <div key={doc.id} className={`${styles.vdrCard} ${isExpanded ? styles.vdrCardExpanded : ''}`}>
-        {/* ── Card Header (always visible, click to expand) ── */}
+        {/* Card Header (Clickable Accordion) */}
         <div className={styles.vdrCardHeader} onClick={() => setExpandedVdrId(isExpanded ? null : doc.id)}>
           <div className={styles.vdrThumb}>
             {isImage
@@ -478,13 +685,30 @@ export default function OnboardingPage() {
             }
             <div className={styles.vdrViewOverlay}>{isExpanded ? 'Collapse ↑' : 'Expand & Review ↓'}</div>
           </div>
+
           <div className={styles.vdrCardBody}>
             <span className={styles.itemCategory}>{doc.categoryLabel}</span>
             <h4 className={styles.vdrCardTitle}>{doc.title}</h4>
             <p className={styles.vdrFileName}>{doc.fileName}</p>
           </div>
+
           <div className={styles.vdrCardFooter}>
-            <span className={styles.docRef}>{doc.vdrReference}</span>
+            <div className={styles.vdrHeaderActionButtons} onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                className={styles.vdrQuickViewBtn}
+                onClick={() => setViewingDoc(doc)}
+              >
+                👁 Modal
+              </button>
+              <button
+                type="button"
+                className={styles.vdrQuickTabBtn}
+                onClick={() => window.open(doc.objectUrl, '_blank')}
+              >
+                ↗ New Tab
+              </button>
+            </div>
             <span className={`${styles.statusBadge} ${
               docStatus === 'Verified' ? styles.statusVerified :
               docStatus === 'Action Required' ? styles.statusAction :
@@ -496,52 +720,44 @@ export default function OnboardingPage() {
           </div>
         </div>
 
-        {/* ── Expanded Panel ── */}
+        {/* Expanded Panel */}
         {isExpanded && (
           <div className={styles.vdrExpandedPanel}>
-
-            {/* Embedded document viewer */}
+            {/* Left: Embedded Document Preview */}
             <div className={styles.vdrEmbedSection}>
               <div className={styles.vdrEmbedLabel}>
-                Document Preview
-                <button className={styles.vdrOpenTabBtn} onClick={() => window.open(doc.objectUrl, '_blank')}>
-                  ↗ Open in New Tab
-                </button>
+                <span>Document Preview</span>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button type="button" className={styles.vdrOpenTabBtn} onClick={() => setViewingDoc(doc)}>
+                    👁 View in Modal
+                  </button>
+                  <button type="button" className={styles.vdrOpenTabBtn} onClick={() => window.open(doc.objectUrl, '_blank')}>
+                    ↗ Open in New Tab
+                  </button>
+                </div>
               </div>
-              {isPdf && (
+
+              {isPdf || doc.objectUrl?.startsWith('data:image/svg+xml') ? (
                 <iframe src={doc.objectUrl} className={styles.vdrEmbedFrame} title={doc.title} />
-              )}
-              {isImage && (
+              ) : isImage ? (
                 <img src={doc.objectUrl} alt={doc.title} className={styles.vdrEmbedImage} />
-              )}
-              {!isPdf && !isImage && (
+              ) : (
                 <div className={styles.vdrEmbedFallback}>
-                  <span style={{ fontSize: '2.5rem', opacity: 0.4 }}>📎</span>
+                  <span style={{ fontSize: '2.5rem', opacity: 0.4 }}>📄</span>
                   <p style={{ opacity: 0.6, fontSize: '0.88rem' }}>{doc.fileName}</p>
                   <a href={doc.objectUrl} download={doc.fileName} className={styles.vdrDownloadLink}>Download File</a>
                 </div>
               )}
             </div>
 
-            {/* Review Feedback Timeline */}
+            {/* Right: Review Feedback & Resubmit */}
             <div className={styles.vdrFeedbackSection}>
               <div className={styles.vdrFeedbackHeader}>
                 <span className={styles.vdrFeedbackTitle}>Review Feedback & Audit Trail</span>
                 <span className={styles.docRef}>Deal: {doc.dealReference}</span>
               </div>
 
-              {/* Submission event */}
               <div className={styles.feedbackTimeline}>
-                <div className={styles.feedbackEvent}>
-                  <div className={styles.feedbackEventDot} style={{ background: 'rgba(255,255,255,0.25)' }} />
-                  <div className={styles.feedbackEventContent}>
-                    <span className={styles.feedbackEventTitle}>Document Submitted to Eagle Holdings VDR</span>
-                    <span className={styles.feedbackEventMeta}>
-                      {new Date(doc.submittedAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })} · Ref: {doc.vdrReference}
-                    </span>
-                  </div>
-                </div>
-
                 {feedback.map((entry, idx) => (
                   <div key={idx} className={styles.feedbackEvent}>
                     <div className={styles.feedbackEventDot} style={{
@@ -556,21 +772,27 @@ export default function OnboardingPage() {
                     </div>
                   </div>
                 ))}
-
-                {feedback.length === 0 && (
-                  <div className={styles.feedbackPending}>
-                    <span style={{ opacity: 0.5, fontSize: '0.88rem' }}>⏳ Awaiting review by the Eagle Holdings advisory team. You will be notified when feedback is available.</span>
-                  </div>
-                )}
               </div>
 
-              {/* Admin: Add note & update status */}
+              {/* Principal: Update/Resubmit Document from VDR */}
+              <div className={styles.vdrResubmitSection}>
+                <label className={styles.vdrResubmitLabel}>
+                  <span>📤 Resubmit / Update Document Version</span>
+                  <input
+                    type="file"
+                    className={styles.hiddenInput}
+                    onChange={(e) => handleVdrResubmit(e, doc)}
+                  />
+                </label>
+              </div>
+
+              {/* Admin: Add Note & Update Status */}
               {userRole === 'admin' && principalSession?.role === 'ADMIN' && (
                 <div className={styles.adminFeedbackForm}>
-                  <span className={styles.itemCategory} style={{ marginBottom: '8px', display: 'block' }}>Add Review Note</span>
+                  <span className={styles.itemCategory} style={{ marginBottom: '8px', display: 'block' }}>Advisor Review & Feedback</span>
                   <textarea
                     className={styles.textarea}
-                    placeholder="Add advisor feedback, conditions, or approval notes..."
+                    placeholder="Add advisor notes or feedback for principal..."
                     value={noteInput}
                     onChange={e => setVdrNoteInputs(prev => ({ ...prev, [doc.id]: e.target.value }))}
                     rows={3}
@@ -578,12 +800,14 @@ export default function OnboardingPage() {
                   />
                   <div className={styles.adminFeedbackBtns}>
                     <button
+                      type="button"
                       className={styles.adminApproveBtn}
                       onClick={() => handleAddVdrNote(doc.id, doc.itemId, 'Verified')}
                     >
                       Approve Document ✓
                     </button>
                     <button
+                      type="button"
                       className={styles.adminActionBtn}
                       onClick={() => handleAddVdrNote(doc.id, doc.itemId, 'Action Required')}
                     >
@@ -591,6 +815,7 @@ export default function OnboardingPage() {
                     </button>
                     {noteInput.trim() && (
                       <button
+                        type="button"
                         className={styles.adminNoteBtn}
                         onClick={() => handleAddVdrNote(doc.id, doc.itemId, docStatus)}
                       >
@@ -660,7 +885,7 @@ export default function OnboardingPage() {
               Data Submission Dropzone
             </button>
             <button className={`${styles.mainNavBtn} ${activeView === 'dataroom' ? styles.activeMainNav : ''}`} onClick={() => setActiveView('dataroom')}>
-              Virtual Data Room {dataRoomDocs.length > 0 && `(${dataRoomDocs.length})`}
+              Virtual Data Room ({dataRoomDocs.length})
             </button>
           </div>
 
@@ -878,23 +1103,23 @@ export default function OnboardingPage() {
               <div style={{ borderBottom: '1px solid var(--border-faint)', paddingBottom: '20px' }}>
                 <h2 style={{ fontSize: '1.4rem', color: 'var(--foreground)', marginBottom: '8px' }}>Virtual Data Room</h2>
                 <p style={{ opacity: 0.7, fontSize: '0.9rem' }}>
-                  View-only repository of all submitted compliance documents. Click any document to open the embedded viewer and cross-check your submissions.
+                  View-only repository of all submitted compliance documents. Expand any document card to view the embedded document, review advisor feedback, or upload an updated version.
                 </p>
               </div>
 
               {/* Data Room sub-tabs */}
               <div className={styles.tabGroup}>
                 <button className={`${styles.tabBtn} ${activeTab === 'all' ? styles.activeTab : ''}`} onClick={() => setActiveTab('all')}>
-                  All Items ({checklist.length})
+                  All Documents ({dataRoomDocs.length})
                 </button>
                 <button className={`${styles.tabBtn} ${activeTab === 'entity' ? styles.activeTab : ''}`} onClick={() => setActiveTab('entity')}>
-                  Entity & KYC ({checklist.filter(i => i.category === 'entity').length})
+                  Entity & KYC ({dataRoomDocs.filter(i => i.category === 'entity').length})
                 </button>
                 <button className={`${styles.tabBtn} ${activeTab === 'project' ? styles.activeTab : ''}`} onClick={() => setActiveTab('project')}>
-                  Technical & Permits ({checklist.filter(i => i.category === 'project').length})
+                  Technical & Permits ({dataRoomDocs.filter(i => i.category === 'project').length})
                 </button>
                 <button className={`${styles.tabBtn} ${activeTab === 'financial' ? styles.activeTab : ''}`} onClick={() => setActiveTab('financial')}>
-                  Financial & Legal ({checklist.filter(i => i.category === 'financial').length})
+                  Financial & Legal ({dataRoomDocs.filter(i => i.category === 'financial').length})
                 </button>
               </div>
 
@@ -910,24 +1135,22 @@ export default function OnboardingPage() {
                   </div>
                 )}
 
-                {/* Submitted documents gallery */}
-                {dataRoomDocs.length > 0 && (
-                  <div>
-                    <h3 className={styles.vdrSectionTitle}>
-                      📁 Your Submitted Documents
-                      <span style={{ fontSize: '0.75rem', opacity: 0.6, marginLeft: '10px', fontWeight: 400 }}>Click to open embedded viewer</span>
-                    </h3>
-                    <div className={styles.vdrGallery}>
-                      {dataRoomDocs
-                        .filter(doc => activeTab === 'all' || doc.category === activeTab)
-                        .map(doc => renderDataRoomCard(doc))}
-                    </div>
+                {/* Submitted documents gallery (Expandable Accordion Cards) */}
+                <div>
+                  <h3 className={styles.vdrSectionTitle}>
+                    📁 Submitted Compliance Documents & Advisor Audit Trail
+                    <span style={{ fontSize: '0.75rem', opacity: 0.6, marginLeft: '10px', fontWeight: 400 }}>Click card to expand embedded viewer &amp; review feedback</span>
+                  </h3>
+                  <div className={styles.vdrGallery}>
+                    {dataRoomDocs
+                      .filter(doc => activeTab === 'all' || doc.category === activeTab)
+                      .map(doc => renderDataRoomCard(doc))}
                   </div>
-                )}
+                </div>
 
                 {/* Full checklist index */}
                 <div>
-                  <h3 className={styles.vdrSectionTitle}>📋 Complete Compliance Index</h3>
+                  <h3 className={styles.vdrSectionTitle}>📋 Complete Project Intake Checklist</h3>
                   <div className={`${styles.checklistGrid} ${userRole === 'principal' && !principalSession ? styles.blurredGrid : ''}`} style={{ marginTop: '16px' }}>
                     {filteredChecklist.map(item => renderChecklistItem(item))}
                   </div>

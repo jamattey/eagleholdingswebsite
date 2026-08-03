@@ -83,22 +83,20 @@ describe('Onboarding Portal Page', () => {
     // Switch to Virtual Data Room tab where checklist items are displayed
     fireEvent.click(screen.getByRole('button', { name: /Virtual Data Room/i }));
 
-    expect(screen.getByText('Personal KYC & Passport Verification')).toBeInTheDocument();
-    expect(screen.getByText('Ultimate Beneficial Owner (UBO) Disclosures')).toBeInTheDocument();
-    expect(screen.getByText('Corporate Banking Credentials & CIS')).toBeInTheDocument();
-    
-    // Updated compliance items according to new 11 items list
-    expect(screen.getByText('Feasibility Studies')).toBeInTheDocument();
-    expect(screen.getByText('Geotech Report')).toBeInTheDocument();
-    expect(screen.getByText('Soil Test')).toBeInTheDocument();
-    expect(screen.getByText('Structural Design')).toBeInTheDocument();
-    expect(screen.getByText('Full Plans with Quantities')).toBeInTheDocument();
-    expect(screen.getByText('Electrical Designs')).toBeInTheDocument();
-    expect(screen.getByText('Sewage and Trash Disposal')).toBeInTheDocument();
-    expect(screen.getByText('Permits')).toBeInTheDocument();
-    expect(screen.getByText('Licenses')).toBeInTheDocument();
-    expect(screen.getByText('Civil Design')).toBeInTheDocument();
-    expect(screen.getByText('Environmental & Social Impact Assessment (ESIA)')).toBeInTheDocument();
+    expect(screen.getAllByText('Personal KYC & Passport Verification').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Ultimate Beneficial Owner (UBO) Disclosures').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Corporate Banking Credentials & CIS').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Feasibility Studies').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Geotech Report').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Soil Test').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Structural Design').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Full Plans with Quantities').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Electrical Designs').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Sewage and Trash Disposal').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Permits').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Licenses').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Civil Design').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Environmental & Social Impact Assessment (ESIA)').length).toBeGreaterThan(0);
   });
 
   it('switches between Principal View and Admin View', async () => {
