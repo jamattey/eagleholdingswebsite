@@ -7,48 +7,51 @@ import Footer from "@/components/Footer/Footer";
 import styles from "./page.module.css";
 
 const initialChecklist = [
+  // ─── Entity & Principal Compliance ───
   {
     id: 'item-01',
     category: 'entity',
-    categoryLabel: 'Entity Compliance',
+    categoryLabel: 'Entity & Principal KYC',
     title: 'Personal KYC & Passport Verification',
-    description: 'Notarized government ID and proof of residence for all project principals.',
+    description: 'Notarized government ID and proof of residence for all project principals and directors.',
     status: 'Verified',
     ref: 'DOC-KYC-991',
   },
   {
     id: 'item-02',
     category: 'entity',
-    categoryLabel: 'Entity Compliance',
+    categoryLabel: 'Entity & Principal KYC',
     title: 'Ultimate Beneficial Owner (UBO) Disclosures',
-    description: 'Corporate ownership breakdown certifying all beneficiaries with >10% equity.',
+    description: 'Corporate ownership breakdown certifying all beneficiaries meeting the applicable threshold.',
     status: 'Verified',
     ref: 'DOC-UBO-402',
   },
   {
     id: 'item-03',
     category: 'entity',
-    categoryLabel: 'Entity Compliance',
-    title: 'Corporate Banking Credentials & CIS',
-    description: 'Client Information Sheet (CIS) and bank reference letter dated within 30 days.',
-    status: 'Under Audit',
-    ref: 'DOC-CIS-108',
+    categoryLabel: 'Entity & Principal KYC',
+    title: 'Politically Exposed Person (PEP) Declarations',
+    description: 'PEP declarations for all directors, signatories, and equity-investor UBOs.',
+    status: 'Pending Upload',
+    ref: 'DOC-PEP-REQ',
   },
   {
     id: 'item-04',
     category: 'entity',
-    categoryLabel: 'Entity Compliance',
-    title: 'Proof of Equity & Source of Funds',
-    description: 'Audited financial statements or bank confirmation of sponsor capital contribution.',
-    status: 'Action Required',
-    ref: 'DOC-SOF-PENDING',
+    categoryLabel: 'Entity & Principal KYC',
+    title: 'Mandatory Corporate Verification Documents',
+    description: 'Certificate of Incorporation, M&A, Register of Directors, and recent Audited Financials.',
+    status: 'Under Audit',
+    ref: 'DOC-CORP-112',
   },
+
+  // ─── Project Technical & Permits ───
   {
     id: 'item-05',
     category: 'project',
     categoryLabel: 'Project Technical Compliance',
-    title: 'Architectural & Structural Drawings',
-    description: 'Approved master plan, elevation drawings, and certified structural blueprints.',
+    title: 'Architectural, Structural & MEP Drawings',
+    description: 'Approved master plan, elevation drawings, structural blueprints, and stamped MEP schematics.',
     status: 'Verified',
     ref: 'DOC-ARCH-882',
   },
@@ -56,29 +59,67 @@ const initialChecklist = [
     id: 'item-06',
     category: 'project',
     categoryLabel: 'Project Technical Compliance',
-    title: 'Mechanical, Electrical, & Plumbing (MEP) Plans',
-    description: 'Stamped engineering MEP schematics, load calculations, and utility connections.',
-    status: 'Under Audit',
-    ref: 'DOC-MEP-304',
+    title: 'Ghana Regulatory & Land Title Documentation',
+    description: 'Land lease/title registration (Lands Commission), GIPC Certificate, and Ghana Tourism Authority license.',
+    status: 'Pending Upload',
+    ref: 'DOC-LAND-REQ',
   },
   {
     id: 'item-07',
     category: 'project',
     categoryLabel: 'Project Technical Compliance',
-    title: 'Geotechnical & Soil Test Reports',
-    description: 'Certified soil borings, foundation analysis, and seismic hazard assessments.',
-    status: 'Pending Upload',
-    ref: 'DOC-SOIL-REQUIRED',
+    title: 'Environmental & Social Impact Assessment (ESIA)',
+    description: 'EPA environmental permit and ESIA approval aligned with Equator Principles/IFC Standards.',
+    status: 'Action Required',
+    ref: 'DOC-ESIA-PENDING',
   },
   {
     id: 'item-08',
     category: 'project',
     categoryLabel: 'Project Technical Compliance',
-    title: 'Environmental & Municipal Building Permits',
-    description: 'Zoning approvals, Environmental Impact Statement (EIS), and construction permits.',
-    status: 'Pending Upload',
-    ref: 'DOC-PERMIT-REQUIRED',
+    title: 'Geotechnical & Soil Test Reports',
+    description: 'Certified soil borings, foundation analysis, and seismic hazard assessments.',
+    status: 'Under Audit',
+    ref: 'DOC-SOIL-304',
   },
+
+  // ─── Financial & Legal Contracts ───
+  {
+    id: 'item-09',
+    category: 'financial',
+    categoryLabel: 'Financial & Legal Compliance',
+    title: 'Corporate Banking Credentials & CIS',
+    description: 'Client Information Sheet (CIS) and bank reference letter dated within 30 days.',
+    status: 'Under Audit',
+    ref: 'DOC-CIS-108',
+  },
+  {
+    id: 'item-10',
+    category: 'financial',
+    categoryLabel: 'Financial & Legal Compliance',
+    title: 'Source of Funds & Equity Proof',
+    description: 'Evidence of sponsor equity contribution, source of wealth, and finalized financial model.',
+    status: 'Action Required',
+    ref: 'DOC-SOF-PENDING',
+  },
+  {
+    id: 'item-11',
+    category: 'financial',
+    categoryLabel: 'Financial & Legal Compliance',
+    title: 'Executed EPC / Construction Contract',
+    description: 'Finalized Engineering, Procurement & Construction contract with the primary contractor.',
+    status: 'Pending Upload',
+    ref: 'DOC-EPC-REQ',
+  },
+  {
+    id: 'item-12',
+    category: 'financial',
+    categoryLabel: 'Financial & Legal Compliance',
+    title: 'Hotel Management or Franchise Agreement',
+    description: 'Executed management contract or franchise agreement with the designated hotel operator.',
+    status: 'Pending Upload',
+    ref: 'DOC-HMA-REQ',
+  }
 ];
 
 const initialPipeline = [
@@ -162,6 +203,7 @@ export default function OnboardingPage() {
   const filteredChecklist = checklist.filter((item) => {
     if (activeTab === 'entity') return item.category === 'entity';
     if (activeTab === 'project') return item.category === 'project';
+    if (activeTab === 'financial') return item.category === 'financial';
     return true;
   });
 
@@ -568,13 +610,19 @@ export default function OnboardingPage() {
                 className={`${styles.tabBtn} ${activeTab === 'entity' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('entity')}
               >
-                Entity & Principal Compliance ({checklist.filter(i => i.category === 'entity').length})
+                Entity & Principal KYC ({checklist.filter(i => i.category === 'entity').length})
               </button>
               <button 
                 className={`${styles.tabBtn} ${activeTab === 'project' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('project')}
               >
-                Project Technical & Permits ({checklist.filter(i => i.category === 'project').length})
+                Technical & Permits ({checklist.filter(i => i.category === 'project').length})
+              </button>
+              <button 
+                className={`${styles.tabBtn} ${activeTab === 'financial' ? styles.activeTab : ''}`}
+                onClick={() => setActiveTab('financial')}
+              >
+                Financial & Legal ({checklist.filter(i => i.category === 'financial').length})
               </button>
             </div>
 
