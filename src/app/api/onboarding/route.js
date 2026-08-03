@@ -30,6 +30,10 @@ export async function POST(request) {
 
     // Principal Action: Uploading a document into Data Room
     if (action === 'upload_document') {
+      if (!session || (session.role !== 'PRINCIPAL' && session.role !== 'ADMIN')) {
+        securityLog('UNAUTHORIZED_UPLOAD', { action, ip: clientIp, userRole: session?.role });
+        return Response.json({ error: 'Unauthorized. Principal access required.' }, { status: 403 });
+      }
       if (!itemId || !documentName) {
         return Response.json({ error: 'Missing document item ID or file name.' }, { status: 400 });
       }
@@ -48,6 +52,10 @@ export async function POST(request) {
 
     // Principal Action: Submitting feedback on capital raise offer
     if (action === 'submit_feedback') {
+      if (!session || (session.role !== 'PRINCIPAL' && session.role !== 'ADMIN')) {
+        securityLog('UNAUTHORIZED_FEEDBACK', { action, ip: clientIp, userRole: session?.role });
+        return Response.json({ error: 'Unauthorized. Principal access required.' }, { status: 403 });
+      }
       if (!feedbackText) {
         return Response.json({ error: 'Feedback text is required.' }, { status: 400 });
       }
@@ -66,8 +74,9 @@ export async function POST(request) {
     const isAdminAction = action === 'admin_update_status' || action === 'admin_update_terms' || action === 'invite_principal';
     
     if (isAdminAction) {
-      if (session && session.role !== 'ADMIN' && session.role !== 'PARTNER') {
+      if (!session || session.role !== 'ADMIN') {
         securityLog('UNAUTHORIZED_ADMIN_ACTION', { action, ip: clientIp, userRole: session?.role });
+        return Response.json({ error: 'Unauthorized. Admin access required.' }, { status: 403 });
       }
     }
 

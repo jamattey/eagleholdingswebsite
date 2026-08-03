@@ -140,6 +140,9 @@ export default function OnboardingPage() {
         const data = await res.json();
         if (data.authenticated && data.session) {
           setPrincipalSession(data.session);
+          if (data.session.role === 'ADMIN') {
+            setUserRole('admin');
+          }
         } else {
           setPrincipalSession(null);
         }
@@ -338,21 +341,23 @@ export default function OnboardingPage() {
                 {userRole === 'admin' ? 'Eagle Holdings Backend Command Center' : 'Secure Principal Data Room'}
               </div>
 
-              {/* Role Switcher */}
-              <div className={styles.roleSwitcher}>
-                <button 
-                  className={`${styles.roleBtn} ${userRole === 'principal' ? styles.activeRole : ''}`}
-                  onClick={() => setUserRole('principal')}
-                >
-                  Principal View
-                </button>
-                <button 
-                  className={`${styles.roleBtn} ${userRole === 'admin' ? styles.activeRole : ''}`}
-                  onClick={() => setUserRole('admin')}
-                >
-                  Admin View (Backend)
-                </button>
-              </div>
+              {/* Role Switcher - Only visible to ADMIN */}
+              {principalSession?.role === 'ADMIN' && (
+                <div className={styles.roleSwitcher}>
+                  <button 
+                    className={`${styles.roleBtn} ${userRole === 'principal' ? styles.activeRole : ''}`}
+                    onClick={() => setUserRole('principal')}
+                  >
+                    Principal View
+                  </button>
+                  <button 
+                    className={`${styles.roleBtn} ${userRole === 'admin' ? styles.activeRole : ''}`}
+                    onClick={() => setUserRole('admin')}
+                  >
+                    Admin View (Backend)
+                  </button>
+                </div>
+              )}
             </div>
 
             <h1 className={styles.pageTitle}>
@@ -433,7 +438,7 @@ export default function OnboardingPage() {
           )}
 
           {/* ─── Admin Feature: Invite Principal & Sponsor ─── */}
-          {userRole === 'admin' && (
+          {userRole === 'admin' && principalSession?.role === 'ADMIN' && (
             <div className={styles.inviteCard}>
               <div>
                 <span className={styles.itemCategory}>Sponsor Management</span>
@@ -617,7 +622,7 @@ export default function OnboardingPage() {
                       <span className={styles.docRef}>Ref: {item.ref}</span>
 
                       {/* Role-Based Item Footer Controls */}
-                      {userRole === 'admin' ? (
+                      {userRole === 'admin' && principalSession?.role === 'ADMIN' ? (
                         <div className={styles.adminControls}>
                           <button 
                             onClick={() => handleAdminStatusChange(item.id, 'Verified')}
@@ -684,7 +689,7 @@ export default function OnboardingPage() {
             </div>
 
             {/* Role-Based Offer Section: Admin Editor vs Principal Feedback Form */}
-            {userRole === 'admin' ? (
+            {userRole === 'admin' && principalSession?.role === 'ADMIN' ? (
               <form className={styles.adminTermsForm} onSubmit={handleAdminTermsSave}>
                 <div className={styles.adminInputGroup}>
                   <label className={styles.itemCategory} htmlFor="targetCapital">Target Capital</label>

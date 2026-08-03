@@ -1,21 +1,36 @@
 // src/middleware.js
-// Next.js Edge Middleware — OWASP Zero Trust Route Security Guard.
+// Next.js Edge Middleware — OWASP Zero Trust Route Security Guard with Strict Role Siloing.
 
 import { NextResponse } from 'next/server';
 import { verifyJwt } from '@/lib/jwt';
 
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
+  
+  const token = request.cookies.get('eagle_session')?.value;
+  const session = token ? await verifyJwt(token) : null;
 
   // Protect Partner Portal route
   if (pathname.startsWith('/partner-portal')) {
-    const token = request.cookies.get('eagle_session')?.value;
-    const session = await verifyJwt(token);
-
     if (!session) {
       const loginUrl = new URL('/partner-login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
+    }
+    
+    // Strict Siloing: Only PARTNER and ADMIN can access Partner Portal
+    if (session.role !== 'PARTNER' && session.role !== 'ADMIN') {
+      // If it's a PRINCIPAL trying to access partner portal, redirect them to their onboarding portal
+      return NextResponse.redirect(new URL('/onboarding', request.url));
+    }
+  }
+
+  // Protect Onboarding Portal route
+  if (pathname.startsWith('/onboarding')) {
+    // Note: unauthenticated users can access onboarding (it shows a blurred view)
+    // However, if authenticated as PARTNER, they are forbidden from viewing principal workflows
+    if (session && session.role === 'PARTNER') {
+      return NextResponse.redirect(new URL('/partner-portal', request.url));
     }
   }
 
@@ -23,5 +38,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/partner-portal/:path*'],
+  matcher: ['/partner-portal/:path*', '/onboarding/:path*'],
 };
