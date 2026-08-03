@@ -27,9 +27,15 @@ export async function proxy(request) {
 
   // Protect Onboarding Portal route
   if (pathname.startsWith('/onboarding')) {
-    // Note: unauthenticated users can access onboarding (it shows a blurred view)
-    // However, if authenticated as PARTNER, they are forbidden from viewing principal workflows
-    if (session && session.role === 'PARTNER') {
+    if (!session) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('type', 'principal');
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    
+    // Strict Siloing: Only PRINCIPAL and ADMIN can access Onboarding Portal
+    if (session.role !== 'PRINCIPAL' && session.role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }

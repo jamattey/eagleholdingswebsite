@@ -1,9 +1,9 @@
 // src/lib/jwt.js
 // Edge & Node-compatible, OWASP-compliant cryptographic JWT engine using Web Standard Crypto API.
 
-const Encoder = typeof TextEncoder !== 'undefined' ? TextEncoder : require('util').TextEncoder;
-const Decoder = typeof TextDecoder !== 'undefined' ? TextDecoder : require('util').TextDecoder;
-const webCrypto = (typeof crypto !== 'undefined' && crypto.subtle) ? crypto : require('crypto').webcrypto;
+const Encoder = typeof globalThis !== 'undefined' ? globalThis.TextEncoder : TextEncoder;
+const Decoder = typeof globalThis !== 'undefined' ? globalThis.TextDecoder : TextDecoder;
+const webCrypto = typeof globalThis !== 'undefined' ? globalThis.crypto : crypto;
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-zero-trust-secret-key-change-in-production';
 
