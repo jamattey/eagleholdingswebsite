@@ -832,3 +832,675 @@
     min-width: unset;
   }
 }
+
+/* ─── Notices ─── */
+.uploadNotice {
+  padding: 14px 20px;
+  background: rgba(168, 140, 58, 0.15);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  color: var(--foreground);
+  font-size: 0.9rem;
+}
+
+.adminNotice {
+  padding: 14px 20px;
+  background: rgba(46, 204, 113, 0.15);
+  border: 1px solid #2ecc71;
+  border-radius: 4px;
+  color: #2ecc71;
+  font-size: 0.9rem;
+}
+
+.authBanner {
+  padding: 16px 22px;
+  background: rgba(168, 140, 58, 0.08);
+  border: 1px dashed var(--gold);
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* ─── Ready to Submit badge ─── */
+.statusReady {
+  background: rgba(168, 140, 58, 0.18);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+
+/* ─── Staged file preview (inside checklist item) ─── */
+.stagedPreview {
+  margin-top: 14px;
+  border: 1px solid var(--border-faint);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.stagedImageThumb {
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+.stagedPdfThumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.stagedPdfIcon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.stagedFileName {
+  font-size: 0.82rem;
+  opacity: 0.75;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+/* ─── Submit document button group ─── */
+.submitGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.submitDocBtn {
+  background: var(--gold);
+  color: var(--obsidian);
+  border: none;
+  padding: 9px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: opacity 0.25s ease;
+  white-space: nowrap;
+}
+
+.submitDocBtn:hover {
+  opacity: 0.88;
+}
+
+/* ─── Staged View Button ─── */
+.stagedViewBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: none;
+  border-top: 1px solid var(--border-faint);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  text-align: left;
+}
+
+.stagedViewBtn:hover {
+  background: rgba(168, 140, 58, 0.12);
+  color: var(--gold);
+}
+.emptyState {
+  grid-column: 1 / -1;
+  padding: 60px;
+  text-align: center;
+  opacity: 0.6;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* ─── Deals card (admin) ─── */
+.dealsCard {
+  background: rgba(46, 204, 113, 0.04);
+  border: 1px solid rgba(46, 204, 113, 0.2);
+  border-radius: 6px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── VDR Gallery ─── */
+.vdrSectionTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.vdrGallery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.vdrCard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-faint);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.vdrCardExpanded {
+  border-color: var(--gold);
+  box-shadow: 0 0 30px rgba(168, 140, 58, 0.1);
+}
+
+/* The clickable header row */
+.vdrCardHeader {
+  display: flex;
+  align-items: stretch;
+  cursor: pointer;
+  gap: 0;
+  transition: background 0.2s ease;
+}
+
+.vdrCardHeader:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.vdrCard .vdrThumb {
+  width: 120px;
+  min-width: 120px;
+  height: 100px;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+.vdrThumb {
+  position: relative;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.vdrThumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vdrThumbPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.vdrThumbIcon {
+  font-size: 3rem;
+  opacity: 0.4;
+}
+
+.vdrViewOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(168, 140, 58, 0.88);
+  color: var(--obsidian);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.vdrCardHeader:hover .vdrViewOverlay {
+  opacity: 1;
+}
+
+/* ─── Expanded Panel ─── */
+.vdrExpandedPanel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--border-faint);
+  min-height: 420px;
+}
+
+@media (max-width: 900px) {
+  .vdrExpandedPanel {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left: embedded doc */
+.vdrEmbedSection {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-faint);
+}
+
+.vdrEmbedLabel {
+  padding: 10px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-bottom: 1px solid var(--border-faint);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vdrOpenTabBtn {
+  background: none;
+  border: 1px solid var(--border-faint);
+  color: var(--foreground);
+  padding: 4px 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.vdrOpenTabBtn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.vdrEmbedFrame {
+  flex: 1;
+  width: 100%;
+  min-height: 380px;
+  border: none;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.vdrEmbedImage {
+  width: 100%;
+  object-fit: contain;
+  max-height: 420px;
+  display: block;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.vdrEmbedFallback {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+}
+
+.vdrDownloadLink {
+  background: none;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 8px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.vdrDownloadLink:hover {
+  background: var(--gold);
+  color: var(--obsidian);
+}
+
+/* Right: feedback panel */
+.vdrFeedbackSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+.vdrFeedbackHeader {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-faint);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.vdrFeedbackTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Timeline */
+.feedbackTimeline {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+}
+
+.feedbackEvent {
+  display: flex;
+  gap: 14px;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.feedbackEvent:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 16px;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-faint);
+}
+
+.feedbackEventDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.feedbackEventContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.feedbackEventTitle {
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--foreground);
+}
+
+.feedbackEventMeta {
+  font-size: 0.72rem;
+  opacity: 0.5;
+  font-family: monospace;
+}
+
+.feedbackPending {
+  padding: 12px 0;
+}
+
+/* Admin feedback form */
+.adminFeedbackForm {
+  padding: 16px;
+  border-top: 1px solid var(--border-faint);
+  flex-shrink: 0;
+}
+
+.adminFeedbackBtns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.adminNoteBtn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-faint);
+  color: var(--foreground);
+  padding: 6px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.adminNoteBtn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.vdrCardBody {
+  padding: 14px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.vdrCardTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.vdrFileName {
+  font-size: 0.78rem;
+  opacity: 0.6;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.vdrCardFooter {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-very-faint);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  min-width: 220px;
+  flex-shrink: 0;
+  border-top: none;
+  border-left: 1px solid var(--border-faint);
+}
+
+.vdrExpandChevron {
+  font-size: 0.65rem;
+  opacity: 0.5;
+  margin-left: auto;
+}
+
+/* ─── Document Viewer Modal ─── */
+.viewerOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.viewerModal {
+  background: var(--obsidian);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+}
+
+.viewerHeader {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-faint);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.viewerTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--white);
+  margin: 4px 0;
+}
+
+.viewerMeta {
+  font-size: 0.78rem;
+  opacity: 0.55;
+  font-family: monospace;
+  display: block;
+}
+
+.viewerCloseBtn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-faint);
+  color: var(--foreground);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewerCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.viewerBody {
+  flex: 1;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.2);
+  min-height: 0;
+}
+
+.viewerIframe {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  border: none;
+}
+
+.viewerImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+  padding: 20px;
+}
+
+.viewerFallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 16px;
+  padding: 40px;
+  text-align: center;
+}
+
+.viewerFallbackIcon {
+  font-size: 4rem;
+  opacity: 0.4;
+}
+
+.viewerFallbackText {
+  font-size: 0.9rem;
+  opacity: 0.6;
+  max-width: 360px;
+}
+
+.viewerDownloadBtn {
+  background: var(--gold);
+  color: var(--obsidian);
+  padding: 10px 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.viewerDownloadBtn:hover {
+  opacity: 0.88;
+}
+
+.viewerFooter {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border-faint);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .vdrGallery {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .viewerModal {
+    max-height: 95vh;
+  }
+
+  .vdrCard {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .vdrGallery {
+    grid-template-columns: 1fr;
+  }
+}

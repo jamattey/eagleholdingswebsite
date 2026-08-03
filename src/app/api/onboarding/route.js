@@ -44,9 +44,35 @@ export async function POST(request) {
         success: true,
         action: 'upload_document',
         itemId,
-        status: 'Under Audit',
+        status: 'Ready to Submit',
         auditReference: `VDR-${Math.floor(100000 + Math.random() * 900000)}`,
         uploadedAt: new Date().toISOString(),
+      });
+    }
+
+    // Principal Action: Formally submit a staged document to the Data Room
+    if (action === 'submit_document') {
+      if (!session || (session.role !== 'PRINCIPAL' && session.role !== 'ADMIN')) {
+        securityLog('UNAUTHORIZED_SUBMIT', { action, ip: clientIp, userRole: session?.role });
+        return Response.json({ error: 'Unauthorized. Principal access required.' }, { status: 403 });
+      }
+      if (!itemId || !documentName) {
+        return Response.json({ error: 'Missing document item ID or file name.' }, { status: 400 });
+      }
+
+      const dealRef = `DEAL-${Date.now().toString(36).toUpperCase()}`;
+      const vdrRef = `VDR-${Math.floor(100000 + Math.random() * 900000)}`;
+
+      securityLog('VDR_DOCUMENT_SUBMITTED', { itemId, documentName, dealRef, vdrRef, ip: clientIp });
+
+      return Response.json({
+        success: true,
+        action: 'submit_document',
+        itemId,
+        status: 'Under Audit',
+        dealReference: dealRef,
+        vdrReference: vdrRef,
+        submittedAt: new Date().toISOString(),
       });
     }
 
