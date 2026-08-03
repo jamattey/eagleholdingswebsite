@@ -4,7 +4,7 @@
 import { NextResponse } from 'next/server';
 import { verifyJwt } from '@/lib/jwt';
 
-export async function middleware(request) {
+export async function proxy(request) {
   const { pathname } = request.nextUrl;
   
   const token = request.cookies.get('eagle_session')?.value;
@@ -20,8 +20,7 @@ export async function middleware(request) {
     
     // Strict Siloing: Only PARTNER and ADMIN can access Partner Portal
     if (session.role !== 'PARTNER' && session.role !== 'ADMIN') {
-      // If it's a PRINCIPAL trying to access partner portal, redirect them to their onboarding portal
-      return NextResponse.redirect(new URL('/onboarding', request.url));
+      return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }
 
@@ -30,7 +29,7 @@ export async function middleware(request) {
     // Note: unauthenticated users can access onboarding (it shows a blurred view)
     // However, if authenticated as PARTNER, they are forbidden from viewing principal workflows
     if (session && session.role === 'PARTNER') {
-      return NextResponse.redirect(new URL('/partner-portal', request.url));
+      return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }
 

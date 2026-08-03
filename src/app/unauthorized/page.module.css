@@ -1,0 +1,267 @@
+.main {
+  min-height: calc(100vh - 160px); /* Account for header/footer */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.backgroundGrid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(168, 140, 58, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 140, 58, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 0;
+  opacity: 0.3;
+}
+
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(168, 140, 58, 0.2);
+  opacity: 0.8;
+  animation: scanline 6s linear infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.lockContainer {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.lockIcon {
+  width: 80px;
+  height: 80px;
+  color: var(--gold);
+  filter: drop-shadow(0 0 10px rgba(168, 140, 58, 0.5));
+  animation: pulse 3s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(168, 140, 58, 0.5)); }
+  100% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(168, 140, 58, 0.8)); }
+}
+
+.errorCode {
+  font-size: 6rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0 0 16px 0;
+  color: var(--foreground);
+  position: relative;
+  letter-spacing: -2px;
+}
+
+/* Glitch effect on the error code */
+.errorCode::before,
+.errorCode::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+.errorCode::before {
+  color: #ff3333;
+  z-index: -1;
+  animation: glitch-anim-1 3s infinite linear alternate-reverse;
+}
+
+.errorCode::after {
+  color: #33ffff;
+  z-index: -2;
+  animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+  0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
+  20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+  60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+  80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
+  100% { clip-path: inset(30% 0 50% 0); transform: translate(1px, -1px); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, 1px); }
+  20% { clip-path: inset(30% 0 20% 0); transform: translate(-2px, -1px); }
+  40% { clip-path: inset(70% 0 10% 0); transform: translate(2px, 2px); }
+  60% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, -2px); }
+  80% { clip-path: inset(50% 0 30% 0); transform: translate(1px, 1px); }
+  100% { clip-path: inset(5% 0 80% 0); transform: translate(-1px, -1px); }
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 32px 0;
+  border-bottom: 1px solid rgba(168, 140, 58, 0.3);
+  padding-bottom: 16px;
+  width: 100%;
+}
+
+.terminal {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(168, 140, 58, 0.2);
+  border-radius: 4px;
+  padding: 24px;
+  width: 100%;
+  text-align: left;
+  font-family: monospace;
+  font-size: 0.9rem;
+  margin-bottom: 32px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.terminal p {
+  margin: 0 0 8px 0;
+  color: #a88c3a;
+  opacity: 0.9;
+}
+
+.prompt {
+  color: #ff4444;
+  margin-right: 8px;
+}
+
+.blinkCursor {
+  display: inline-block;
+  animation: blink 1s step-end infinite;
+  color: var(--gold);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin: 0 0 32px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.primaryBtn {
+  background: var(--gold);
+  color: #000;
+  border: none;
+  padding: 12px 24px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.primaryBtn:hover {
+  background: #c9a742;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 140, 58, 0.3);
+}
+
+.secondaryBtn {
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 24px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.secondaryBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+  .errorCode {
+    font-size: 4rem;
+    margin-bottom: 8px;
+  }
+  
+  .title {
+    font-size: 1.1rem;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+  }
+  
+  .terminal {
+    padding: 16px;
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+  }
+  
+  .description {
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  
+  .primaryBtn, .secondaryBtn {
+    width: 100%;
+    padding: 14px 24px;
+    font-size: 0.95rem;
+  }
+  
+  .lockIcon {
+    width: 60px;
+    height: 60px;
+  }
+}
