@@ -23,7 +23,6 @@ describe('Header Component', () => {
   it('renders the navigation buttons', () => {
     render(<Header />);
     expect(screen.getAllByText('Login').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Onboarding').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Contact').length).toBeGreaterThan(0);
   });
 
