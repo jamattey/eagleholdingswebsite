@@ -91,9 +91,6 @@ export default function Header() {
                 <Link href="/login" className={styles.buttonPrimary}>
                   Login
                 </Link>
-                <Link href="/onboarding" className={styles.buttonPrimary}>
-                  Onboarding
-                </Link>
                 <Link href="/contact" className={styles.buttonPrimary}>
                   Contact
                 </Link>
@@ -139,9 +136,6 @@ export default function Header() {
           <>
             <Link href="/login" className={styles.mobileNavLink} onClick={closeMobileMenu}>
               Login
-            </Link>
-            <Link href="/onboarding" className={styles.mobileNavLink} onClick={closeMobileMenu}>
-              Onboarding
             </Link>
             <Link href="/contact" className={styles.mobileNavLink} onClick={closeMobileMenu}>
               Contact
