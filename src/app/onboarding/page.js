@@ -50,42 +50,114 @@ const initialChecklist = [
     id: 'item-05',
     category: 'project',
     categoryLabel: 'Project Technical Compliance',
-    title: 'Architectural, Structural & MEP Drawings',
-    description: 'Approved master plan, elevation drawings, structural blueprints, and stamped MEP schematics.',
-    status: 'Verified',
-    ref: 'DOC-ARCH-882',
-  },
-  {
-    id: 'item-06',
-    category: 'project',
-    categoryLabel: 'Project Technical Compliance',
     title: 'Ghana Regulatory & Land Title Documentation',
     description: 'Land lease/title registration (Lands Commission), GIPC Certificate, and Ghana Tourism Authority license.',
     status: 'Pending Upload',
     ref: 'DOC-LAND-REQ',
   },
   {
+    id: 'item-06',
+    category: 'project',
+    categoryLabel: 'Project Technical Compliance',
+    title: 'Feasibility Studies',
+    description: 'Comprehensive analysis of project viability, market conditions, and economic feasibility.',
+    status: 'Pending Upload',
+    ref: 'DOC-TECH-001',
+  },
+  {
     id: 'item-07',
     category: 'project',
     categoryLabel: 'Project Technical Compliance',
-    title: 'Environmental & Social Impact Assessment (ESIA)',
-    description: 'EPA environmental permit and ESIA approval aligned with Equator Principles/IFC Standards.',
-    status: 'Action Required',
-    ref: 'DOC-ESIA-PENDING',
+    title: 'Geotech Report',
+    description: 'Detailed analysis of subsurface conditions, including ground stability and foundation requirements.',
+    status: 'Pending Upload',
+    ref: 'DOC-TECH-002',
   },
   {
     id: 'item-08',
     category: 'project',
     categoryLabel: 'Project Technical Compliance',
-    title: 'Geotechnical & Soil Test Reports',
-    description: 'Certified soil borings, foundation analysis, and seismic hazard assessments.',
-    status: 'Under Audit',
-    ref: 'DOC-SOIL-304',
+    title: 'Soil Test',
+    description: 'Certified soil borings and composition analysis.',
+    status: 'Pending Upload',
+    ref: 'DOC-TECH-003',
+  },
+  {
+    id: 'item-09',
+    category: 'project',
+    categoryLabel: 'Project Technical Compliance',
+    title: 'Structural Design',
+    description: 'Detailed structural engineering blueprints and calculations.',
+    status: 'Pending Upload',
+    ref: 'DOC-TECH-004',
+  },
+  {
+    id: 'item-10',
+    category: 'project',
+    categoryLabel: 'Project Technical Compliance',
+    title: 'Full Plans with Quantities',
+    description: 'Complete architectural plans accompanied by a detailed Bill of Quantities (BoQ).',
+    status: 'Pending Upload',
+    ref: 'DOC-TECH-005',
+  },
+  {
+    id: 'item-11',
+    category: 'project',
+    categoryLabel: 'Project Technical Compliance',
+    title: 'Electrical Designs',
+    description: 'Stamped electrical schematics, load calculations, and power distribution plans.',
+    status: 'Pending Upload',
+    ref: 'DOC-TECH-006',
+  },
+  {
+    id: 'item-12',
+    category: 'project',
+    categoryLabel: 'Project Technical Compliance',
+    title: 'Sewage and Trash Disposal',
+    description: 'Waste management plans, including sewage treatment and solid waste disposal strategies.',
+    status: 'Pending Upload',
+    ref: 'DOC-TECH-007',
+  },
+  {
+    id: 'item-13',
+    category: 'project',
+    categoryLabel: 'Project Technical Compliance',
+    title: 'Permits',
+    description: 'All necessary local and national construction and operational permits.',
+    status: 'Pending Upload',
+    ref: 'DOC-TECH-008',
+  },
+  {
+    id: 'item-14',
+    category: 'project',
+    categoryLabel: 'Project Technical Compliance',
+    title: 'Licenses',
+    description: 'Required commercial, hospitality, and operational licenses.',
+    status: 'Pending Upload',
+    ref: 'DOC-TECH-009',
+  },
+  {
+    id: 'item-15',
+    category: 'project',
+    categoryLabel: 'Project Technical Compliance',
+    title: 'Civil Design',
+    description: 'Site civil engineering designs, including grading, drainage, and infrastructure layouts.',
+    status: 'Pending Upload',
+    ref: 'DOC-TECH-010',
+  },
+  {
+    id: 'item-16',
+    category: 'project',
+    categoryLabel: 'Project Technical Compliance',
+    title: 'Environmental Assessment',
+    description: 'EPA environmental permit and environmental impact assessment aligned with regulatory standards.',
+    status: 'Action Required',
+    ref: 'DOC-TECH-011',
   },
 
   // ─── Financial & Legal Contracts ───
   {
-    id: 'item-09',
+    id: 'item-17',
     category: 'financial',
     categoryLabel: 'Financial & Legal Compliance',
     title: 'Corporate Banking Credentials & CIS',
@@ -94,7 +166,7 @@ const initialChecklist = [
     ref: 'DOC-CIS-108',
   },
   {
-    id: 'item-10',
+    id: 'item-18',
     category: 'financial',
     categoryLabel: 'Financial & Legal Compliance',
     title: 'Source of Funds & Equity Proof',
@@ -103,7 +175,7 @@ const initialChecklist = [
     ref: 'DOC-SOF-PENDING',
   },
   {
-    id: 'item-11',
+    id: 'item-19',
     category: 'financial',
     categoryLabel: 'Financial & Legal Compliance',
     title: 'Executed EPC / Construction Contract',
@@ -112,7 +184,7 @@ const initialChecklist = [
     ref: 'DOC-EPC-REQ',
   },
   {
-    id: 'item-12',
+    id: 'item-20',
     category: 'financial',
     categoryLabel: 'Financial & Legal Compliance',
     title: 'Hotel Management or Franchise Agreement',
@@ -147,7 +219,10 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [userRole, setUserRole] = useState('principal'); // 'principal' | 'admin'
   const [principalSession, setPrincipalSession] = useState(null);
+  
+  const [activeView, setActiveView] = useState('dashboard');
   const [activeTab, setActiveTab] = useState('all');
+  
   const [checklist, setChecklist] = useState(initialChecklist);
   const [uploadNotice, setUploadNotice] = useState('');
   const [feedbackText, setFeedbackText] = useState('');
@@ -194,7 +269,6 @@ export default function OnboardingPage() {
     checkZeroTrustSession();
   }, []);
 
-  // Calculate compliance progress percentage
   const totalItems = checklist.length;
   const completedItems = checklist.filter((item) => item.status === 'Verified').length;
   const auditItems = checklist.filter((item) => item.status === 'Under Audit').length;
@@ -207,7 +281,8 @@ export default function OnboardingPage() {
     return true;
   });
 
-  // Principal file upload
+  const actionChecklist = checklist.filter(item => item.status !== 'Verified');
+
   const handleFileUpload = async (e, itemId) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -242,7 +317,6 @@ export default function OnboardingPage() {
     }
   };
 
-  // Principal feedback submission
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
     if (!feedbackText.trim()) return;
@@ -272,7 +346,6 @@ export default function OnboardingPage() {
     }
   };
 
-  // Admin status update action
   const handleAdminStatusChange = async (itemId, newStatus) => {
     try {
       const res = await fetch('/api/onboarding', {
@@ -299,7 +372,6 @@ export default function OnboardingPage() {
     }
   };
 
-  // Admin offer terms update
   const handleAdminTermsSave = async (e) => {
     e.preventDefault();
     try {
@@ -323,7 +395,6 @@ export default function OnboardingPage() {
     }
   };
 
-  // Admin invite principal submission
   const handleInviteSubmit = async (e) => {
     e.preventDefault();
     if (!inviteForm.sponsorName || !inviteForm.email || !inviteForm.projectName) return;
@@ -366,13 +437,64 @@ export default function OnboardingPage() {
     setTimeout(() => setCopiedLink(false), 4000);
   };
 
+  const renderChecklistItem = (item) => (
+    <div key={item.id} className={styles.checklistItem}>
+      <div>
+        <div className={styles.itemHeader}>
+          <div>
+            <span className={styles.itemCategory}>{item.categoryLabel}</span>
+            <h3 className={styles.itemTitle}>{item.title}</h3>
+          </div>
+          <span className={`
+            ${styles.statusBadge} 
+            ${item.status === 'Verified' ? styles.statusVerified : ''}
+            ${item.status === 'Under Audit' ? styles.statusAudit : ''}
+            ${item.status === 'Action Required' ? styles.statusAction : ''}
+            ${item.status === 'Pending Upload' ? styles.statusPending : ''}
+          `}>
+            {item.status}
+          </span>
+        </div>
+        <p className={styles.itemDescription}>{item.description}</p>
+      </div>
+
+      <div className={styles.itemFooter}>
+        <span className={styles.docRef}>Ref: {item.ref}</span>
+
+        {userRole === 'admin' && principalSession?.role === 'ADMIN' ? (
+          <div className={styles.adminControls}>
+            <button 
+              onClick={() => handleAdminStatusChange(item.id, 'Verified')}
+              className={styles.adminApproveBtn}
+            >
+              Approve ✓
+            </button>
+            <button 
+              onClick={() => handleAdminStatusChange(item.id, 'Action Required')}
+              className={styles.adminActionBtn}
+            >
+              Flag Action ⚠️
+            </button>
+          </div>
+        ) : (
+          <label className={styles.uploadLabel}>
+            <span>{item.status === 'Verified' ? 'Re-upload' : 'Upload Document'}</span>
+            <input 
+              type="file" 
+              className={styles.hiddenInput}
+              onChange={(e) => handleFileUpload(e, item.id)}
+            />
+          </label>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <>
       <meta name="robots" content="noindex, nofollow" />
       <Header />
       <main className={styles.main}>
-
-        {/* ─── Hero / Header ─── */}
         <header className={styles.heroStrip}>
           <div className={styles.bgGrid}></div>
           <div className={styles.heroContent}>
@@ -383,7 +505,6 @@ export default function OnboardingPage() {
                 {userRole === 'admin' ? 'Eagle Holdings Backend Command Center' : 'Secure Principal Data Room'}
               </div>
 
-              {/* Role Switcher - Only visible to ADMIN */}
               {principalSession?.role === 'ADMIN' && (
                 <div className={styles.roleSwitcher}>
                   <button 
@@ -411,7 +532,6 @@ export default function OnboardingPage() {
                 : 'Streamlined project intake, real-time compliance clearance tracking, and capital raise offer feedback for project principals and sponsors.'}
             </p>
 
-            {/* Overall Compliance Progress Meter */}
             <div className={styles.progressSection}>
               <div className={styles.progressHeader}>
                 <span className={styles.progressLabel}>Overall Project Compliance Clearance Status</span>
@@ -424,8 +544,28 @@ export default function OnboardingPage() {
           </div>
         </header>
 
-        {/* ─── Main Content Container ─── */}
         <div className={styles.container}>
+
+          <div className={styles.mainNavTabs}>
+            <button 
+              className={`${styles.mainNavBtn} ${activeView === 'dashboard' ? styles.activeMainNav : ''}`}
+              onClick={() => setActiveView('dashboard')}
+            >
+              Dashboard View
+            </button>
+            <button 
+              className={`${styles.mainNavBtn} ${activeView === 'submission' ? styles.activeMainNav : ''}`}
+              onClick={() => setActiveView('submission')}
+            >
+              Data Submission Dropzone
+            </button>
+            <button 
+              className={`${styles.mainNavBtn} ${activeView === 'dataroom' ? styles.activeMainNav : ''}`}
+              onClick={() => setActiveView('dataroom')}
+            >
+              Virtual Data Room
+            </button>
+          </div>
 
           {uploadNotice && (
             <div style={{
@@ -435,6 +575,7 @@ export default function OnboardingPage() {
               borderRadius: '4px',
               color: 'var(--foreground)',
               fontSize: '0.9rem',
+              marginBottom: '20px'
             }}>
               ✓ {uploadNotice}
             </div>
@@ -448,12 +589,12 @@ export default function OnboardingPage() {
               borderRadius: '4px',
               color: '#2ecc71',
               fontSize: '0.9rem',
+              marginBottom: '20px'
             }}>
               🛡️ {adminNotice}
             </div>
           )}
 
-          {/* Prompt if in Principal Mode without explicit login session */}
           {userRole === 'principal' && !principalSession && (
             <div style={{
               padding: '16px 22px',
@@ -465,6 +606,7 @@ export default function OnboardingPage() {
               alignItems: 'center',
               flexWrap: 'wrap',
               gap: '16px',
+              marginBottom: '20px'
             }}>
               <div>
                 <strong style={{ color: 'var(--gold)', display: 'block', marginBottom: '4px' }}>Project Principal Login Recommended</strong>
@@ -479,334 +621,322 @@ export default function OnboardingPage() {
             </div>
           )}
 
-          {/* ─── Admin Feature: Invite Principal & Sponsor ─── */}
-          {userRole === 'admin' && principalSession?.role === 'ADMIN' && (
-            <div className={styles.inviteCard}>
-              <div>
-                <span className={styles.itemCategory}>Sponsor Management</span>
-                <h2 className={styles.offerTitle}>Invite Project Principal to Onboarding</h2>
-                <p className={styles.offerSubtitle}>Generate a secure invitation link and dispatch onboarding credentials to a new project sponsor.</p>
-              </div>
-
-              <form className={styles.inviteForm} onSubmit={handleInviteSubmit}>
-                <div className={styles.inviteGrid}>
-                  <div className={styles.adminInputGroup}>
-                    <label className={styles.itemCategory} htmlFor="sponsorName">Principal / Sponsor Name *</label>
-                    <input 
-                      id="sponsorName"
-                      type="text"
-                      className={styles.adminInput}
-                      placeholder="e.g. Apex Civil Infrastructure"
-                      value={inviteForm.sponsorName}
-                      onChange={(e) => setInviteForm({ ...inviteForm, sponsorName: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className={styles.adminInputGroup}>
-                    <label className={styles.itemCategory} htmlFor="email">Corporate Email *</label>
-                    <input 
-                      id="email"
-                      type="email"
-                      className={styles.adminInput}
-                      placeholder="sponsor@company.com"
-                      value={inviteForm.email}
-                      onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className={styles.adminInputGroup}>
-                    <label className={styles.itemCategory} htmlFor="projectName">Project Title *</label>
-                    <input 
-                      id="projectName"
-                      type="text"
-                      className={styles.adminInput}
-                      placeholder="e.g. Deepwater Terminal Expansion"
-                      value={inviteForm.projectName}
-                      onChange={(e) => setInviteForm({ ...inviteForm, projectName: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className={styles.adminInputGroup}>
-                    <label className={styles.itemCategory} htmlFor="facilityAmount">Target Facility</label>
-                    <input 
-                      id="facilityAmount"
-                      type="text"
-                      className={styles.adminInput}
-                      placeholder="$50,000,000 USD"
-                      value={inviteForm.facilityAmount}
-                      onChange={(e) => setInviteForm({ ...inviteForm, facilityAmount: e.target.value })}
-                    />
-                  </div>
-                </div>
-
-                <button type="submit" className={styles.adminSaveBtn} style={{ alignSelf: 'flex-start' }}>
-                  Generate & Send Principal Invitation
-                </button>
-              </form>
-
-              {/* Generated Invite Link Banner */}
-              {latestInvite && (
-                <div className={styles.inviteResultBanner}>
+          {activeView === 'dashboard' && (
+            <div className={styles.viewSection}>
+              {userRole === 'admin' && principalSession?.role === 'ADMIN' && (
+                <div className={styles.inviteCard}>
                   <div>
-                    <span style={{ fontSize: '0.8rem', opacity: 0.7, display: 'block' }}>Active Invitation Link for {latestInvite.sponsorName}:</span>
-                    <span className={styles.copyBadge}>{latestInvite.inviteUrl}</span>
+                    <span className={styles.itemCategory}>Sponsor Management</span>
+                    <h2 className={styles.offerTitle}>Invite Project Principal to Onboarding</h2>
+                    <p className={styles.offerSubtitle}>Generate a secure invitation link and dispatch onboarding credentials to a new project sponsor.</p>
                   </div>
-                  <button type="button" onClick={copyInviteLink} className={styles.copyBtn}>
-                    {copiedLink ? '✓ Copied Link!' : 'Copy Full Invitation Link'}
-                  </button>
+
+                  <form className={styles.inviteForm} onSubmit={handleInviteSubmit}>
+                    <div className={styles.inviteGrid}>
+                      <div className={styles.adminInputGroup}>
+                        <label className={styles.itemCategory} htmlFor="sponsorName">Principal / Sponsor Name *</label>
+                        <input 
+                          id="sponsorName"
+                          type="text"
+                          className={styles.adminInput}
+                          placeholder="e.g. Apex Civil Infrastructure"
+                          value={inviteForm.sponsorName}
+                          onChange={(e) => setInviteForm({ ...inviteForm, sponsorName: e.target.value })}
+                          required
+                        />
+                      </div>
+
+                      <div className={styles.adminInputGroup}>
+                        <label className={styles.itemCategory} htmlFor="email">Corporate Email *</label>
+                        <input 
+                          id="email"
+                          type="email"
+                          className={styles.adminInput}
+                          placeholder="sponsor@company.com"
+                          value={inviteForm.email}
+                          onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
+                          required
+                        />
+                      </div>
+
+                      <div className={styles.adminInputGroup}>
+                        <label className={styles.itemCategory} htmlFor="projectName">Project Title *</label>
+                        <input 
+                          id="projectName"
+                          type="text"
+                          className={styles.adminInput}
+                          placeholder="e.g. Deepwater Terminal Expansion"
+                          value={inviteForm.projectName}
+                          onChange={(e) => setInviteForm({ ...inviteForm, projectName: e.target.value })}
+                          required
+                        />
+                      </div>
+
+                      <div className={styles.adminInputGroup}>
+                        <label className={styles.itemCategory} htmlFor="facilityAmount">Target Facility</label>
+                        <input 
+                          id="facilityAmount"
+                          type="text"
+                          className={styles.adminInput}
+                          placeholder="$50,000,000 USD"
+                          value={inviteForm.facilityAmount}
+                          onChange={(e) => setInviteForm({ ...inviteForm, facilityAmount: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
+                    <button type="submit" className={styles.adminSaveBtn} style={{ alignSelf: 'flex-start' }}>
+                      Generate & Send Principal Invitation
+                    </button>
+                  </form>
+
+                  {latestInvite && (
+                    <div className={styles.inviteResultBanner}>
+                      <div>
+                        <span style={{ fontSize: '0.8rem', opacity: 0.7, display: 'block' }}>Active Invitation Link for {latestInvite.sponsorName}:</span>
+                        <span className={styles.copyBadge}>{latestInvite.inviteUrl}</span>
+                      </div>
+                      <button type="button" onClick={copyInviteLink} className={styles.copyBtn}>
+                        {copiedLink ? '✓ Copied Link!' : 'Copy Full Invitation Link'}
+                      </button>
+                    </div>
+                  )}
+
+                  <div>
+                    <h3 className={styles.itemTitle} style={{ fontSize: '1.2rem', marginBottom: '12px' }}>Invited Sponsors Pipeline</h3>
+                    <table className={styles.pipelineTable}>
+                      <thead>
+                        <tr>
+                          <th>Sponsor Entity</th>
+                          <th>Project Title</th>
+                          <th>Target Facility</th>
+                          <th>Invite Code</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {pipeline.map((item, idx) => (
+                          <tr key={idx}>
+                            <td><strong>{item.sponsorName}</strong><br /><span style={{ opacity: 0.6, fontSize: '0.78rem' }}>{item.email}</span></td>
+                            <td>{item.projectName}</td>
+                            <td>{item.facilityAmount}</td>
+                            <td><code style={{ color: 'var(--gold)' }}>{item.inviteCode}</code></td>
+                            <td>
+                              <span className={`
+                                ${styles.statusBadge} 
+                                ${item.status.includes('Active') ? styles.statusVerified : styles.statusAudit}
+                              `}>
+                                {item.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
                 </div>
               )}
 
-              {/* Invited Pipeline Table */}
-              <div>
-                <h3 className={styles.itemTitle} style={{ fontSize: '1.2rem', marginBottom: '12px' }}>Invited Sponsors Pipeline</h3>
-                <table className={styles.pipelineTable}>
-                  <thead>
-                    <tr>
-                      <th>Sponsor Entity</th>
-                      <th>Project Title</th>
-                      <th>Target Facility</th>
-                      <th>Invite Code</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pipeline.map((item, idx) => (
-                      <tr key={idx}>
-                        <td><strong>{item.sponsorName}</strong><br /><span style={{ opacity: 0.6, fontSize: '0.78rem' }}>{item.email}</span></td>
-                        <td>{item.projectName}</td>
-                        <td>{item.facilityAmount}</td>
-                        <td><code style={{ color: 'var(--gold)' }}>{item.inviteCode}</code></td>
-                        <td>
-                          <span className={`
-                            ${styles.statusBadge} 
-                            ${item.status.includes('Active') ? styles.statusVerified : styles.statusAudit}
-                          `}>
-                            {item.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <div className={styles.offerCard}>
+                <div className={styles.offerHeader}>
+                  <div>
+                    <span className={styles.itemCategory}>Capital Raise Structure & Terms</span>
+                    <h2 className={styles.offerTitle}>Eagle Holdings Advisory Offer & Term Sheet</h2>
+                    <p className={styles.offerSubtitle}>
+                      {userRole === 'admin'
+                        ? 'Backend Offer Term Sheet Control — Adjust advisory terms displayed to the sponsor.'
+                        : 'Review current term sheet parameters and submit structural feedback or counter-proposals.'}
+                    </p>
+                  </div>
+                </div>
 
+                <div className={styles.termsGrid}>
+                  <div className={styles.termItem}>
+                    <span className={styles.termLabel}>Target Capital Facility</span>
+                    <span className={styles.termVal}>{offerTerms.targetCapital}</span>
+                  </div>
+                  <div className={styles.termItem}>
+                    <span className={styles.termLabel}>Preferred Return Yield</span>
+                    <span className={styles.termVal}>{offerTerms.preferredTerms}</span>
+                  </div>
+                  <div className={styles.termItem}>
+                    <span className={styles.termLabel}>Senior Debt LTV</span>
+                    <span className={styles.termVal}>{offerTerms.ltvRatio}</span>
+                  </div>
+                  <div className={styles.termItem}>
+                    <span className={styles.termLabel}>Advisory Term</span>
+                    <span className={styles.termVal}>{offerTerms.advisoryTerm}</span>
+                  </div>
+                </div>
+
+                {userRole === 'admin' && principalSession?.role === 'ADMIN' ? (
+                  <form className={styles.adminTermsForm} onSubmit={handleAdminTermsSave}>
+                    <div className={styles.adminInputGroup}>
+                      <label className={styles.itemCategory} htmlFor="targetCapital">Target Capital</label>
+                      <input 
+                        id="targetCapital"
+                        type="text" 
+                        className={styles.adminInput}
+                        value={offerTerms.targetCapital}
+                        onChange={(e) => setOfferTerms({ ...offerTerms, targetCapital: e.target.value })}
+                      />
+                    </div>
+                    <div className={styles.adminInputGroup}>
+                      <label className={styles.itemCategory} htmlFor="preferredTerms">Preferred Yield</label>
+                      <input 
+                        id="preferredTerms"
+                        type="text" 
+                        className={styles.adminInput}
+                        value={offerTerms.preferredTerms}
+                        onChange={(e) => setOfferTerms({ ...offerTerms, preferredTerms: e.target.value })}
+                      />
+                    </div>
+                    <div className={styles.adminInputGroup}>
+                      <label className={styles.itemCategory} htmlFor="ltvRatio">Debt LTV</label>
+                      <input 
+                        id="ltvRatio"
+                        type="text" 
+                        className={styles.adminInput}
+                        value={offerTerms.ltvRatio}
+                        onChange={(e) => setOfferTerms({ ...offerTerms, ltvRatio: e.target.value })}
+                      />
+                    </div>
+                    <button type="submit" className={styles.adminSaveBtn}>
+                      Update Offer Terms
+                    </button>
+                  </form>
+                ) : (
+                  <>
+                    {feedbackStatus === 'success' ? (
+                      <div className={styles.successFeedbackAlert}>
+                        ✓ Feedback successfully delivered to the Investment Committee! Receipt Reference: <strong>{feedbackReceipt}</strong>.
+                      </div>
+                    ) : (
+                      <form className={styles.feedbackForm} onSubmit={handleFeedbackSubmit}>
+                        <label className={styles.itemCategory} htmlFor="feedbackText">Sponsor Feedback & Term Sheet Queries</label>
+                        <textarea 
+                          id="feedbackText"
+                          name="feedbackText"
+                          placeholder="Provide your feedback regarding the capital raise facility, preferred yield terms, draw schedule, or compliance items..."
+                          className={styles.textarea}
+                          value={feedbackText}
+                          onChange={(e) => setFeedbackText(e.target.value)}
+                          required
+                        />
+                        <button 
+                          type="submit" 
+                          className={styles.submitBtn}
+                          disabled={feedbackStatus === 'submitting'}
+                        >
+                          {feedbackStatus === 'submitting' ? 'Delivering Feedback...' : 'Submit Capital Raise Feedback'}
+                        </button>
+                      </form>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
           )}
 
-          {/* Checklist Tabs */}
-          <div>
-            <div className={styles.tabGroup}>
-              <button 
-                className={`${styles.tabBtn} ${activeTab === 'all' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('all')}
-              >
-                All Checklist Items ({checklist.length})
-              </button>
-              <button 
-                className={`${styles.tabBtn} ${activeTab === 'entity' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('entity')}
-              >
-                Entity & Principal KYC ({checklist.filter(i => i.category === 'entity').length})
-              </button>
-              <button 
-                className={`${styles.tabBtn} ${activeTab === 'project' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('project')}
-              >
-                Technical & Permits ({checklist.filter(i => i.category === 'project').length})
-              </button>
-              <button 
-                className={`${styles.tabBtn} ${activeTab === 'financial' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('financial')}
-              >
-                Financial & Legal ({checklist.filter(i => i.category === 'financial').length})
-              </button>
-            </div>
-
-            {/* Checklist Items Grid (Blurry for unauthenticated visitors) */}
-            <div className={userRole === 'principal' && !principalSession ? styles.blurredContainer : ''}>
-              {userRole === 'principal' && !principalSession && (
-                <div className={styles.blurOverlay}>
-                  <div className={styles.overlayLockIcon}>🔒</div>
-                  <h3 className={styles.overlayTitle}>Authentication Required to Access Data Room</h3>
-                  <p className={styles.overlayText}>
-                    Detailed compliance intake checklists, technical specifications, and Virtual Data Room dropzones are restricted to verified project principals.
-                  </p>
-                  <button 
-                    onClick={() => router.push('/login?type=principal')}
-                    className={styles.blurLoginBtn}
-                  >
-                    Authenticate to Access Principal Workspace
-                  </button>
-                </div>
-              )}
-
-              <div className={`${styles.checklistGrid} ${userRole === 'principal' && !principalSession ? styles.blurredGrid : ''}`} style={{ marginTop: '30px' }}>
-                {filteredChecklist.map((item) => (
-                  <div key={item.id} className={styles.checklistItem}>
-                    <div>
-                      <div className={styles.itemHeader}>
-                        <div>
-                          <span className={styles.itemCategory}>{item.categoryLabel}</span>
-                          <h3 className={styles.itemTitle}>{item.title}</h3>
-                        </div>
-                        <span className={`
-                          ${styles.statusBadge} 
-                          ${item.status === 'Verified' ? styles.statusVerified : ''}
-                          ${item.status === 'Under Audit' ? styles.statusAudit : ''}
-                          ${item.status === 'Action Required' ? styles.statusAction : ''}
-                          ${item.status === 'Pending Upload' ? styles.statusPending : ''}
-                        `}>
-                          {item.status}
-                        </span>
-                      </div>
-                      <p className={styles.itemDescription}>{item.description}</p>
-                    </div>
-
-                    <div className={styles.itemFooter}>
-                      <span className={styles.docRef}>Ref: {item.ref}</span>
-
-                      {/* Role-Based Item Footer Controls */}
-                      {userRole === 'admin' && principalSession?.role === 'ADMIN' ? (
-                        <div className={styles.adminControls}>
-                          <button 
-                            onClick={() => handleAdminStatusChange(item.id, 'Verified')}
-                            className={styles.adminApproveBtn}
-                          >
-                            Approve ✓
-                          </button>
-                          <button 
-                            onClick={() => handleAdminStatusChange(item.id, 'Action Required')}
-                            className={styles.adminActionBtn}
-                          >
-                            Flag Action ⚠️
-                          </button>
-                        </div>
-                      ) : (
-                        <label className={styles.uploadLabel}>
-                          <span>{item.status === 'Verified' ? 'Re-upload' : 'Upload Document'}</span>
-                          <input 
-                            type="file" 
-                            className={styles.hiddenInput}
-                            onChange={(e) => handleFileUpload(e, item.id)}
-                          />
-                        </label>
-                      )}
-                    </div>
-                  </div>
-                ))}
+          {activeView === 'submission' && (
+            <div className={styles.viewSection}>
+              <div className={styles.tabGroup} style={{ borderBottom: 'none', marginBottom: '0' }}>
+                <h2 style={{ fontSize: '1.4rem', color: 'var(--foreground)' }}>File & Data Submission Dropzone</h2>
+                <p style={{ opacity: 0.7, fontSize: '0.9rem', marginBottom: '20px' }}>Upload missing documentation and complete required action items.</p>
               </div>
-            </div>
-          </div>
 
-          {/* ─── Capital Raise Offer & Term Sheet Section ─── */}
-          <div className={styles.offerCard}>
-            <div className={styles.offerHeader}>
-              <div>
-                <span className={styles.itemCategory}>Capital Raise Structure & Terms</span>
-                <h2 className={styles.offerTitle}>Eagle Holdings Advisory Offer & Term Sheet</h2>
-                <p className={styles.offerSubtitle}>
-                  {userRole === 'admin'
-                    ? 'Backend Offer Term Sheet Control — Adjust advisory terms displayed to the sponsor.'
-                    : 'Review current term sheet parameters and submit structural feedback or counter-proposals.'}
-                </p>
-              </div>
-            </div>
-
-            {/* Terms Summary Grid */}
-            <div className={styles.termsGrid}>
-              <div className={styles.termItem}>
-                <span className={styles.termLabel}>Target Capital Facility</span>
-                <span className={styles.termVal}>{offerTerms.targetCapital}</span>
-              </div>
-              <div className={styles.termItem}>
-                <span className={styles.termLabel}>Preferred Return Yield</span>
-                <span className={styles.termVal}>{offerTerms.preferredTerms}</span>
-              </div>
-              <div className={styles.termItem}>
-                <span className={styles.termLabel}>Senior Debt LTV</span>
-                <span className={styles.termVal}>{offerTerms.ltvRatio}</span>
-              </div>
-              <div className={styles.termItem}>
-                <span className={styles.termLabel}>Advisory Term</span>
-                <span className={styles.termVal}>{offerTerms.advisoryTerm}</span>
-              </div>
-            </div>
-
-            {/* Role-Based Offer Section: Admin Editor vs Principal Feedback Form */}
-            {userRole === 'admin' && principalSession?.role === 'ADMIN' ? (
-              <form className={styles.adminTermsForm} onSubmit={handleAdminTermsSave}>
-                <div className={styles.adminInputGroup}>
-                  <label className={styles.itemCategory} htmlFor="targetCapital">Target Capital</label>
-                  <input 
-                    id="targetCapital"
-                    type="text" 
-                    className={styles.adminInput}
-                    value={offerTerms.targetCapital}
-                    onChange={(e) => setOfferTerms({ ...offerTerms, targetCapital: e.target.value })}
-                  />
-                </div>
-                <div className={styles.adminInputGroup}>
-                  <label className={styles.itemCategory} htmlFor="preferredTerms">Preferred Yield</label>
-                  <input 
-                    id="preferredTerms"
-                    type="text" 
-                    className={styles.adminInput}
-                    value={offerTerms.preferredTerms}
-                    onChange={(e) => setOfferTerms({ ...offerTerms, preferredTerms: e.target.value })}
-                  />
-                </div>
-                <div className={styles.adminInputGroup}>
-                  <label className={styles.itemCategory} htmlFor="ltvRatio">Debt LTV</label>
-                  <input 
-                    id="ltvRatio"
-                    type="text" 
-                    className={styles.adminInput}
-                    value={offerTerms.ltvRatio}
-                    onChange={(e) => setOfferTerms({ ...offerTerms, ltvRatio: e.target.value })}
-                  />
-                </div>
-                <button type="submit" className={styles.adminSaveBtn}>
-                  Update Offer Terms
-                </button>
-              </form>
-            ) : (
-              <>
-                {feedbackStatus === 'success' ? (
-                  <div className={styles.successFeedbackAlert}>
-                    ✓ Feedback successfully delivered to the Investment Committee! Receipt Reference: <strong>{feedbackReceipt}</strong>.
-                  </div>
-                ) : (
-                  <form className={styles.feedbackForm} onSubmit={handleFeedbackSubmit}>
-                    <label className={styles.itemCategory} htmlFor="feedbackText">Sponsor Feedback & Term Sheet Queries</label>
-                    <textarea 
-                      id="feedbackText"
-                      name="feedbackText"
-                      placeholder="Provide your feedback regarding the capital raise facility, preferred yield terms, draw schedule, or compliance items..."
-                      className={styles.textarea}
-                      value={feedbackText}
-                      onChange={(e) => setFeedbackText(e.target.value)}
-                      required
-                    />
+              <div className={userRole === 'principal' && !principalSession ? styles.blurredContainer : ''}>
+                {userRole === 'principal' && !principalSession && (
+                  <div className={styles.blurOverlay}>
+                    <div className={styles.overlayLockIcon}>🔒</div>
+                    <h3 className={styles.overlayTitle}>Authentication Required to Access Dropzone</h3>
+                    <p className={styles.overlayText}>
+                      Detailed compliance intake checklists and submission dropzones are restricted to verified project principals.
+                    </p>
                     <button 
-                      type="submit" 
-                      className={styles.submitBtn}
-                      disabled={feedbackStatus === 'submitting'}
+                      onClick={() => router.push('/login?type=principal')}
+                      className={styles.blurLoginBtn}
                     >
-                      {feedbackStatus === 'submitting' ? 'Delivering Feedback...' : 'Submit Capital Raise Feedback'}
+                      Authenticate to Access Principal Workspace
                     </button>
-                  </form>
+                  </div>
                 )}
-              </>
-            )}
+                
+                <div className={`${styles.checklistGrid} ${userRole === 'principal' && !principalSession ? styles.blurredGrid : ''}`}>
+                  {actionChecklist.map(item => renderChecklistItem(item))}
+                  
+                  {actionChecklist.length === 0 && (
+                    <div style={{ padding: '60px', textAlign: 'center', opacity: 0.6, gridColumn: '1 / -1', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', border: '1px dashed rgba(255,255,255,0.1)' }}>
+                      <div style={{ fontSize: '2rem', marginBottom: '10px' }}>✓</div>
+                      <h3 style={{ fontSize: '1.2rem', marginBottom: '6px' }}>All Files Submitted</h3>
+                      <p>No pending action items required.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
-          </div>
+          {activeView === 'dataroom' && (
+            <div className={styles.viewSection}>
+              <div className={styles.tabGroup} style={{ borderBottom: 'none', marginBottom: '0' }}>
+                <h2 style={{ fontSize: '1.4rem', color: 'var(--foreground)' }}>Virtual Data Room</h2>
+                <p style={{ opacity: 0.7, fontSize: '0.9rem', marginBottom: '20px' }}>Comprehensive repository of all project documents, categorised by compliance area.</p>
+              </div>
+
+              <div className={styles.tabGroup}>
+                <button 
+                  className={`${styles.tabBtn} ${activeTab === 'all' ? styles.activeTab : ''}`}
+                  onClick={() => setActiveTab('all')}
+                >
+                  All Items ({checklist.length})
+                </button>
+                <button 
+                  className={`${styles.tabBtn} ${activeTab === 'entity' ? styles.activeTab : ''}`}
+                  onClick={() => setActiveTab('entity')}
+                >
+                  Entity & KYC ({checklist.filter(i => i.category === 'entity').length})
+                </button>
+                <button 
+                  className={`${styles.tabBtn} ${activeTab === 'project' ? styles.activeTab : ''}`}
+                  onClick={() => setActiveTab('project')}
+                >
+                  Technical & Permits ({checklist.filter(i => i.category === 'project').length})
+                </button>
+                <button 
+                  className={`${styles.tabBtn} ${activeTab === 'financial' ? styles.activeTab : ''}`}
+                  onClick={() => setActiveTab('financial')}
+                >
+                  Financial & Legal ({checklist.filter(i => i.category === 'financial').length})
+                </button>
+              </div>
+
+              <div className={userRole === 'principal' && !principalSession ? styles.blurredContainer : ''}>
+                {userRole === 'principal' && !principalSession && (
+                  <div className={styles.blurOverlay}>
+                    <div className={styles.overlayLockIcon}>🔒</div>
+                    <h3 className={styles.overlayTitle}>Authentication Required to Access Data Room</h3>
+                    <p className={styles.overlayText}>
+                      Detailed compliance intake checklists, technical specifications, and Virtual Data Room dropzones are restricted to verified project principals.
+                    </p>
+                    <button 
+                      onClick={() => router.push('/login?type=principal')}
+                      className={styles.blurLoginBtn}
+                    >
+                      Authenticate to Access Principal Workspace
+                    </button>
+                  </div>
+                )}
+                
+                <div className={`${styles.checklistGrid} ${userRole === 'principal' && !principalSession ? styles.blurredGrid : ''}`} style={{ marginTop: '30px' }}>
+                  {filteredChecklist.map((item) => renderChecklistItem(item))}
+                </div>
+              </div>
+            </div>
+          )}
 
         </div>
-
       </main>
       <Footer />
     </>

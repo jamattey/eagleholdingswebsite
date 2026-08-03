@@ -38,6 +38,10 @@ describe('Onboarding Portal Page', () => {
     });
 
     render(<OnboardingPage />);
+    
+    // Switch to Virtual Data Room tab to see the overlay
+    fireEvent.click(screen.getByRole('button', { name: /Virtual Data Room/i }));
+
     expect(screen.getByText(/Authentication Required to Access Data Room/i)).toBeInTheDocument();
 
     const unlockBtn = screen.getByRole('button', { name: /Authenticate to Access Principal Workspace/i });
@@ -59,6 +63,9 @@ describe('Onboarding Portal Page', () => {
 
     render(<OnboardingPage />);
 
+    // Switch to Virtual Data Room tab to check if overlay is removed
+    fireEvent.click(screen.getByRole('button', { name: /Virtual Data Room/i }));
+
     await waitFor(() => {
       expect(screen.queryByText(/Authentication Required to Access Data Room/i)).not.toBeInTheDocument();
     });
@@ -72,13 +79,26 @@ describe('Onboarding Portal Page', () => {
     });
 
     render(<OnboardingPage />);
+    
+    // Switch to Virtual Data Room tab where checklist items are displayed
+    fireEvent.click(screen.getByRole('button', { name: /Virtual Data Room/i }));
+
     expect(screen.getByText('Personal KYC & Passport Verification')).toBeInTheDocument();
     expect(screen.getByText('Ultimate Beneficial Owner (UBO) Disclosures')).toBeInTheDocument();
     expect(screen.getByText('Corporate Banking Credentials & CIS')).toBeInTheDocument();
-    expect(screen.getByText('Architectural, Structural & MEP Drawings')).toBeInTheDocument();
-    expect(screen.getByText('Ghana Regulatory & Land Title Documentation')).toBeInTheDocument();
-    expect(screen.getByText('Geotechnical & Soil Test Reports')).toBeInTheDocument();
-    expect(screen.getByText('Environmental & Social Impact Assessment (ESIA)')).toBeInTheDocument();
+    
+    // Updated compliance items according to new 11 items list
+    expect(screen.getByText('Feasibility Studies')).toBeInTheDocument();
+    expect(screen.getByText('Geotech Report')).toBeInTheDocument();
+    expect(screen.getByText('Soil Test')).toBeInTheDocument();
+    expect(screen.getByText('Structural Design')).toBeInTheDocument();
+    expect(screen.getByText('Full Plans with Quantities')).toBeInTheDocument();
+    expect(screen.getByText('Electrical Designs')).toBeInTheDocument();
+    expect(screen.getByText('Sewage and Trash Disposal')).toBeInTheDocument();
+    expect(screen.getByText('Permits')).toBeInTheDocument();
+    expect(screen.getByText('Licenses')).toBeInTheDocument();
+    expect(screen.getByText('Civil Design')).toBeInTheDocument();
+    expect(screen.getByText('Environmental Assessment')).toBeInTheDocument();
   });
 
   it('switches between Principal View and Admin View', async () => {
@@ -153,7 +173,10 @@ describe('Onboarding Portal Page', () => {
     // Switch to Admin View
     fireEvent.click(screen.getByRole('button', { name: /Admin View \(Backend\)/i }));
 
-    const approveBtns = screen.getAllByRole('button', { name: /Approve ✓/i });
+    // Switch to Data Submission Dropzone where action items and approve buttons exist
+    fireEvent.click(screen.getByRole('button', { name: /Data Submission Dropzone/i }));
+
+    const approveBtns = screen.getAllByRole('button', { name: /Approve/i });
     expect(approveBtns.length).toBeGreaterThan(0);
 
     fireEvent.click(approveBtns[0]);
