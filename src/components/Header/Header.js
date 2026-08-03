@@ -71,7 +71,11 @@ export default function Header() {
           <div className={styles.desktopNav}>
             {session ? (
               <>
-                <span className={styles.roleBadge}>{session.role} ACCESS</span>
+                {session.role === 'ADMIN' ? (
+                  <Link href="/admin" className={styles.buttonPrimary} style={{ background: 'var(--gold)', color: 'var(--obsidian)' }}>
+                    Admin Portal
+                  </Link>
+                ) : null}
                 {session.role === 'PARTNER' || session.role === 'ADMIN' ? (
                   <Link href="/partner-portal" className={styles.buttonPrimary}>
                     Partner Portal
@@ -114,6 +118,11 @@ export default function Header() {
         {session ? (
           <>
             <div className={styles.mobileRoleBadge}>{session.role} ACCESS</div>
+            {session.role === 'ADMIN' ? (
+              <Link href="/admin" className={styles.mobileNavLink} style={{ color: 'var(--gold)', fontWeight: 'bold' }} onClick={closeMobileMenu}>
+                Admin Portal
+              </Link>
+            ) : null}
             {session.role === 'PARTNER' || session.role === 'ADMIN' ? (
               <Link href="/partner-portal" className={styles.mobileNavLink} onClick={closeMobileMenu}>
                 Partner Portal

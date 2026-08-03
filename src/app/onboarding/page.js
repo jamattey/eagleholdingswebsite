@@ -608,7 +608,7 @@ export default function OnboardingPage() {
           </div>
           <p className={styles.itemDescription}>{item.description}</p>
 
-          {/* Document Actions Bar (View in Modal / Open in New Tab) */}
+          {/* Document Actions Bar */}
           {existingDoc && (
             <div className={styles.docActionsBar}>
               <button
@@ -616,14 +616,7 @@ export default function OnboardingPage() {
                 className={styles.docViewModalBtn}
                 onClick={() => setViewingDoc(existingDoc)}
               >
-                👁 View Modal
-              </button>
-              <button
-                type="button"
-                className={styles.docViewTabBtn}
-                onClick={() => window.open(existingDoc.objectUrl, '_blank')}
-              >
-                ↗ Open in New Tab
+                👁 View Document
               </button>
               <span className={styles.stagedFileNameLabel}>{existingDoc.fileName}</span>
             </div>
@@ -652,9 +645,11 @@ export default function OnboardingPage() {
                 Submit to Data Room →
               </button>
             </div>
+          ) : item.status === 'Verified' ? (
+            <span className={styles.verifiedLockedBadge}>✓ Compliance Clearance Passed</span>
           ) : (
             <label className={styles.uploadLabel}>
-              <span>{item.status === 'Verified' || existingDoc ? 'Re-upload Document' : 'Upload Document'}</span>
+              <span>{item.status === 'Action Required' ? 'Re-upload Corrected Document' : 'Upload Document'}</span>
               <input type="file" className={styles.hiddenInput} onChange={(e) => handleFileSelect(e, item.id)} />
             </label>
           )}
@@ -699,14 +694,7 @@ export default function OnboardingPage() {
                 className={styles.vdrQuickViewBtn}
                 onClick={() => setViewingDoc(doc)}
               >
-                👁 Modal
-              </button>
-              <button
-                type="button"
-                className={styles.vdrQuickTabBtn}
-                onClick={() => window.open(doc.objectUrl, '_blank')}
-              >
-                ↗ New Tab
+                👁 View Document
               </button>
             </div>
             <span className={`${styles.statusBadge} ${
@@ -727,14 +715,9 @@ export default function OnboardingPage() {
             <div className={styles.vdrEmbedSection}>
               <div className={styles.vdrEmbedLabel}>
                 <span>Document Preview</span>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button type="button" className={styles.vdrOpenTabBtn} onClick={() => setViewingDoc(doc)}>
-                    👁 View in Modal
-                  </button>
-                  <button type="button" className={styles.vdrOpenTabBtn} onClick={() => window.open(doc.objectUrl, '_blank')}>
-                    ↗ Open in New Tab
-                  </button>
-                </div>
+                <button type="button" className={styles.vdrOpenTabBtn} onClick={() => setViewingDoc(doc)}>
+                  👁 Fullscreen View
+                </button>
               </div>
 
               {isPdf || doc.objectUrl?.startsWith('data:image/svg+xml') ? (
@@ -774,17 +757,23 @@ export default function OnboardingPage() {
                 ))}
               </div>
 
-              {/* Principal: Update/Resubmit Document from VDR */}
-              <div className={styles.vdrResubmitSection}>
-                <label className={styles.vdrResubmitLabel}>
-                  <span>📤 Resubmit / Update Document Version</span>
-                  <input
-                    type="file"
-                    className={styles.hiddenInput}
-                    onChange={(e) => handleVdrResubmit(e, doc)}
-                  />
-                </label>
-              </div>
+              {/* Principal: Re-upload ONLY if Action Required */}
+              {docStatus === 'Action Required' ? (
+                <div className={styles.vdrResubmitSection}>
+                  <label className={styles.vdrResubmitLabel}>
+                    <span>📤 Re-upload Corrected Document</span>
+                    <input
+                      type="file"
+                      className={styles.hiddenInput}
+                      onChange={(e) => handleVdrResubmit(e, doc)}
+                    />
+                  </label>
+                </div>
+              ) : docStatus === 'Verified' ? (
+                <div className={styles.vdrVerifiedNotice}>
+                  ✓ Document Verified &amp; Locked — Compliance Clearance Granted
+                </div>
+              ) : null}
 
               {/* Admin: Add Note & Update Status */}
               {userRole === 'admin' && principalSession?.role === 'ADMIN' && (

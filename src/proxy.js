@@ -45,9 +45,24 @@ export async function proxy(request) {
     }
   }
 
+  // ─── Protect Admin Portal ───────────────────────────────────────────────────
+  if (pathname.startsWith('/admin') || pathname.startsWith('/admin-portal')) {
+    if (!session) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('type', 'partner');
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // Strict Siloing: Only ADMIN can access Executive Admin Portal.
+    if (session.role !== 'ADMIN') {
+      return NextResponse.redirect(new URL('/unauthorized', request.url));
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/partner-portal/:path*', '/onboarding/:path*'],
+  matcher: ['/partner-portal/:path*', '/onboarding/:path*', '/admin/:path*', '/admin-portal/:path*'],
 };
