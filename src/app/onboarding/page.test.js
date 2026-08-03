@@ -98,7 +98,7 @@ describe('Onboarding Portal Page', () => {
     expect(screen.getByText('Permits')).toBeInTheDocument();
     expect(screen.getByText('Licenses')).toBeInTheDocument();
     expect(screen.getByText('Civil Design')).toBeInTheDocument();
-    expect(screen.getByText('Environmental Assessment')).toBeInTheDocument();
+    expect(screen.getByText('Environmental & Social Impact Assessment (ESIA)')).toBeInTheDocument();
   });
 
   it('switches between Principal View and Admin View', async () => {
