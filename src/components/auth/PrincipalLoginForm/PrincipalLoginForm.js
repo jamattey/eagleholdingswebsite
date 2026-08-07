@@ -50,11 +50,6 @@ export default function PrincipalLoginForm({ initialInvite }) {
     }
   };
 
-  const fillDemoCredentials = () => {
-    setPrincipalId('PRINCIPAL-2026');
-    setSecurityKey('sponsor-key-2026');
-  };
-
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       {inviteCode && (
@@ -63,12 +58,6 @@ export default function PrincipalLoginForm({ initialInvite }) {
         </div>
       )}
 
-      <div className={styles.demoBanner}>
-        <span>Need test credentials?</span>
-        <button type="button" onClick={fillDemoCredentials} className={styles.demoBadge}>
-          Use Demo Principal Credentials (PRINCIPAL-2026)
-        </button>
-      </div>
 
       {status === 'error' && errorMsg && (
         <div className={styles.errorMsg} role="alert">

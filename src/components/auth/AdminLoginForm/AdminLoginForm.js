@@ -42,19 +42,9 @@ export default function AdminLoginForm() {
     }
   };
 
-  const fillDemoCredentials = () => {
-    setAdminId('EAGLE-ADMIN');
-    setSecurityKey('admin-key-2026');
-  };
-
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <div className={styles.demoBanner}>
-        <span>Executive Admin Gateway</span>
-        <button type="button" onClick={fillDemoCredentials} className={styles.demoBadge}>
-          Use Admin Credentials (EAGLE-ADMIN)
-        </button>
-      </div>
+
 
       {status === 'error' && errorMsg && (
         <div className={styles.errorMsg} role="alert">

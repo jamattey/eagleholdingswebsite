@@ -43,19 +43,8 @@ export default function PartnerLoginForm() {
     }
   };
 
-  const fillDemoCredentials = () => {
-    setPartnerId('EAGLE-8821');
-    setSecurityKey('demo-key-2026');
-  };
-
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <div className={styles.demoBanner}>
-        <span>Need test credentials?</span>
-        <button type="button" onClick={fillDemoCredentials} className={styles.demoBadge}>
-          Use Demo Credentials (EAGLE-8821)
-        </button>
-      </div>
 
       {status === 'error' && errorMsg && (
         <div className={styles.errorMsg} role="alert">

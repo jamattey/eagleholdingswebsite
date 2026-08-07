@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
+import AdminLoginForm from "@/components/auth/AdminLoginForm/AdminLoginForm";
 import styles from "./page.module.css";
 
 // ─── Initial Admin Sample Datasets ───────────────────────────────────────────
@@ -237,19 +238,15 @@ export default function AdminPortalPage() {
       <>
         <Header />
         <main className={styles.main}>
-          <div className={styles.container} style={{ textAlign: 'center', paddingTop: '160px' }}>
+          <div className={styles.container} style={{ textAlign: 'center', paddingTop: '160px', maxWidth: '600px', margin: '0 auto' }}>
             <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🔒</div>
             <h1 className={styles.pageTitle} style={{ fontSize: '2rem', marginBottom: '12px' }}>Executive Admin Access Required</h1>
             <p className={styles.pageSubtitle} style={{ margin: '0 auto 24px' }}>
               The Executive Admin Portal is strictly restricted to verified Eagle Holdings deal advisors, compliance officers, and executive leadership.
             </p>
-            <button
-              onClick={() => router.push('/login?type=admin')}
-              className={styles.submitBtn}
-              style={{ margin: '0 auto' }}
-            >
-              Authenticate as Executive Admin
-            </button>
+            <div style={{ textAlign: 'left' }}>
+              <AdminLoginForm />
+            </div>
           </div>
         </main>
         <Footer />
@@ -691,6 +688,27 @@ export default function AdminPortalPage() {
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>System Security Audit &amp; Event Stream</h2>
                 <p className={styles.sectionSubtitle}>Real-time log of security events, authentication attempts, rate limiting events, and system audit verifications.</p>
+              </div>
+
+              <div className={styles.adminTableCard} style={{ marginBottom: '32px' }}>
+                <h3 className={styles.inputLabel} style={{ marginBottom: '12px' }}>System Demo Credentials (Internal Use Only)</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px', color: 'var(--foreground)' }}>
+                  <div className={styles.statCard} style={{ padding: '16px' }}>
+                    <span className={styles.statLabel}>Partner Portal</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', marginTop: '8px' }}><strong>ID:</strong> EAGLE-8821</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem' }}><strong>Key:</strong> demo-key-2026</span>
+                  </div>
+                  <div className={styles.statCard} style={{ padding: '16px' }}>
+                    <span className={styles.statLabel}>Principal Onboarding</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', marginTop: '8px' }}><strong>ID:</strong> PRINCIPAL-2026</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem' }}><strong>Key:</strong> sponsor-key-2026</span>
+                  </div>
+                  <div className={styles.statCard} style={{ padding: '16px' }}>
+                    <span className={styles.statLabel}>Executive Admin</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', marginTop: '8px' }}><strong>ID:</strong> EAGLE-ADMIN</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem' }}><strong>Key:</strong> admin-key-2026</span>
+                  </div>
+                </div>
               </div>
 
               <div className={styles.adminTableCard}>
