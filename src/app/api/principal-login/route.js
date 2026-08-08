@@ -40,7 +40,7 @@ export async function POST(request) {
       );
     }
 
-    const sponsorName = safeTimingCompare(cleanId.toUpperCase(), 'PRINCIPAL-2026') 
+    const sponsorName = safeTimingCompare(cleanId.toUpperCase(), 'SPONSOR-8888') 
       ? 'Metro Infrastructure Group' 
       : `Sponsor Entity (${cleanId})`;
 

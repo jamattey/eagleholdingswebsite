@@ -695,18 +695,18 @@ export default function AdminPortalPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px', color: 'var(--foreground)' }}>
                   <div className={styles.statCard} style={{ padding: '16px' }}>
                     <span className={styles.statLabel}>Partner Portal</span>
-                    <span style={{ display: 'block', fontSize: '0.9rem', marginTop: '8px' }}><strong>ID:</strong> EAGLE-8821</span>
-                    <span style={{ display: 'block', fontSize: '0.9rem' }}><strong>Key:</strong> demo-key-2026</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', marginTop: '8px' }}><strong>ID:</strong> EAGLE-7777</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem' }}><strong>Key:</strong> partner-key-7777</span>
                   </div>
                   <div className={styles.statCard} style={{ padding: '16px' }}>
                     <span className={styles.statLabel}>Principal Onboarding</span>
-                    <span style={{ display: 'block', fontSize: '0.9rem', marginTop: '8px' }}><strong>ID:</strong> PRINCIPAL-2026</span>
-                    <span style={{ display: 'block', fontSize: '0.9rem' }}><strong>Key:</strong> sponsor-key-2026</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', marginTop: '8px' }}><strong>ID:</strong> SPONSOR-8888</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem' }}><strong>Key:</strong> sponsor-key-8888</span>
                   </div>
                   <div className={styles.statCard} style={{ padding: '16px' }}>
                     <span className={styles.statLabel}>Executive Admin</span>
-                    <span style={{ display: 'block', fontSize: '0.9rem', marginTop: '8px' }}><strong>ID:</strong> EAGLE-ADMIN</span>
-                    <span style={{ display: 'block', fontSize: '0.9rem' }}><strong>Key:</strong> admin-key-2026</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', marginTop: '8px' }}><strong>ID:</strong> ADMIN-9999</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem' }}><strong>Key:</strong> admin-key-9999</span>
                   </div>
                 </div>
               </div>

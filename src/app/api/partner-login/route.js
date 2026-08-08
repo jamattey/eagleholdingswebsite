@@ -41,7 +41,7 @@ export async function POST(request) {
       );
     }
 
-    const partnerName = safeTimingCompare(cleanPartnerId.toUpperCase(), 'EAGLE-8821') 
+    const partnerName = safeTimingCompare(cleanPartnerId.toUpperCase(), 'EAGLE-7777') 
       ? 'Strategic Global Capital Group' 
       : `Partner Entity (${cleanPartnerId})`;
 

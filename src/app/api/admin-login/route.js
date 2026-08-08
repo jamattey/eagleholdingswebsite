@@ -40,7 +40,7 @@ export async function POST(request) {
       );
     }
 
-    const adminName = safeTimingCompare(cleanId.toUpperCase(), 'EAGLE-ADMIN') 
+    const adminName = safeTimingCompare(cleanId.toUpperCase(), 'ADMIN-9999') 
       ? 'Executive Deal Advisor' 
       : `Executive Admin (${cleanId})`;
 

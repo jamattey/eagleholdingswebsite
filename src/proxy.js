@@ -47,15 +47,7 @@ export async function proxy(request) {
 
   // ─── Protect Admin Portal ───────────────────────────────────────────────────
   if (pathname.startsWith('/admin') || pathname.startsWith('/admin-portal')) {
-    if (!session) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('type', 'admin');
-      loginUrl.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-
-    // Strict Siloing: Only ADMIN can access Executive Admin Portal.
-    if (session.role !== 'ADMIN') {
+    if (session && session.role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }
